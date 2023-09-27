@@ -225,6 +225,7 @@ def cadastrarEvento():
     else:
         print('PERMISSÃO NEGADA! Nome de administrador não encontrado ou senha incorreta.')
 
+
 def validarData(data):
     try:
         datetime.datetime.strptime(data, '%d/%m/%Y')
@@ -239,3 +240,13 @@ def validarHorario(horario):
         return True
     except ValueError:
         return False
+
+
+def listarParticipantes():
+    print(f"{'Todos os Usuários:':^30}")
+    linha()
+    for lista in ['admins', 'user']:
+        for usuario in users[lista]:
+            nome = usuario['name']
+            instituicao = usuario['instituição']
+            print(f'Nome: {nome} - Instituição: {instituicao}')

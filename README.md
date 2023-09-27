@@ -4,9 +4,9 @@ Neste sistema, existem algumas especificações que o cliente gostaria que você
 
 1º O Cliente na condição de usuário admin pode cadastrar minicursos e palestras. Cada minicurso e palestra possui data, local, horário, carga horária e um ministrante.
 
-2º O participante na condição de usuário participante iria primeiro fornecer seus dados: nome, telefone e instituição que está vinculado. Depois disso, o usuário participante poderia selecionar até 3 minicursos e 4 palestras no máximo. Durante a seleção dos minicursos e palestras deve ser observado o choque de horários. 
+2º O participante na condição de usuário participante iria primeiro fornecer seus dados: nome, telefone e instituição que está vinculado. Depois disso, o usuário participante poderia selecionar até 3 minicursos e 4 palestras no máximo. Durante a seleção dos minicursos e palestras deve ser observado o choque de horários.
 
-3º Ao final do evento, o sistema deverá emitir ao usuário um certificado com a listagem de todos os minicursos e palestras que ele se inscreveu e a carga horária total sendo a soma das cargas horárias de todos os minicursos e palestras que ele participou. 
+3º Ao final do evento, o sistema deverá emitir ao usuário um certificado com a listagem de todos os minicursos e palestras que ele se inscreveu e a carga horária total sendo a soma das cargas horárias de todos os minicursos e palestras que ele participou.
 
 Você sabiamente pensou e resolveu esse sistema usando estruturas condicionais, estruturas de repetição, listas, tuplas e dicionários.
 
@@ -18,8 +18,8 @@ os: O módulo os fornece funções para interagir com o sistema operacional subj
 sys: O módulo sys fornece acesso a variáveis e funções específicas do sistema. Ele é usado para interagir com o interpretador Python e o ambiente de execução, permitindo a manipulação de argumentos de linha de comando, saída padrão e outros recursos do sistema.
 
 def linha():
-    """
-    Imprime uma linha de caracteres '=' para fins de formatação.
+"""
+Imprime uma linha de caracteres '=' para fins de formatação.
 
     Esta função imprime uma linha de caracteres '=' para criar uma linha separadora ou de formatação em um texto.
 
@@ -31,8 +31,8 @@ def linha():
     print('=' * 30)
 
 def linhaSimples():
-    """
-    Imprime uma linha de caracteres '-' para fins de formatação simples.
+"""
+Imprime uma linha de caracteres '-' para fins de formatação simples.
 
     Esta função imprime uma linha de caracteres '-' para criar uma linha separadora ou de formatação simples em um texto.
 
@@ -44,10 +44,10 @@ def linhaSimples():
     print('-' * 30)
 
 def tituloCentralizado(titulo):
-    """
-    Imprime um título centralizado em um espaço de 30 caracteres.
+"""
+Imprime um título centralizado em um espaço de 30 caracteres.
 
-    Esta função recebe um título como argumento e o imprime centralizado em um espaço de 30 caracteres, 
+    Esta função recebe um título como argumento e o imprime centralizado em um espaço de 30 caracteres,
     com aspas duplas ao redor do título para destaque.
 
     Args:
@@ -61,8 +61,8 @@ def tituloCentralizado(titulo):
     print(f'"{titulo:^30}"')
 
 def validarSenha(password):
-    """
-    Valida a senha fornecida em relação às senhas de administradores.
+"""
+Valida a senha fornecida em relação às senhas de administradores.
 
     Esta função recebe uma senha como entrada e verifica se ela corresponde a uma das senhas armazenadas
     na lista de senhas dos administradores.
@@ -96,11 +96,11 @@ def validarSenha(password):
             sys.exit()
 
 def cadastrarEvento():
-    """
-    Permite a um administrador cadastrar um evento (minicurso ou palestra).
+"""
+Permite a um administrador cadastrar um evento (minicurso ou palestra).
 
-    Esta função interage com o usuário administrador para cadastrar um evento, incluindo nome, local, data, horário, 
-    carga horária e ministrante do evento. O administrador deve fornecer sua senha para acessar a função e pode 
+    Esta função interage com o usuário administrador para cadastrar um evento, incluindo nome, local, data, horário,
+    carga horária e ministrante do evento. O administrador deve fornecer sua senha para acessar a função e pode
     escolher entre cadastrar um minicurso (M) ou uma palestra (P).
 
     Retorna:
@@ -217,11 +217,9 @@ def cadastrarEvento():
     else:
         print('PERMISSÃO NEGADA!')
 
-import datetime
-
 def validarData(data):
-    """
-    Valida o formato de data (XX/XX/XXXX).
+"""
+Valida o formato de data (XX/XX/XXXX).
 
     Args:
         data (str): A data a ser validada.
@@ -236,8 +234,8 @@ def validarData(data):
         return False
 
 def validarHorario(horario):
-    """
-    Valida o formato de horário (XX:XX).
+"""
+Valida o formato de horário (XX:XX).
 
     Args:
         horario (str): O horário a ser validado.
@@ -251,3 +249,27 @@ def validarHorario(horario):
     except ValueError:
         return False
 
+def listarParticipantes():
+"""
+Lista todos os usuários (administradores e usuários comuns) com seus nomes e instituições.
+
+    Comportamento:
+        - Imprime os nomes e instituições de todos os administradores e usuários comuns registrados.
+
+    Retorna:
+        None
+    """
+    # Título centralizado para indicar a seção de listagem de participantes
+    print(f"{'Todos os Usuários:':^30}")
+
+    # Linha horizontal para separar a lista dos participantes
+    linha()
+
+    # Itera sobre as listas de administradores e usuários
+    for lista in ['admins', 'user']:
+        for usuario in users[lista]:
+            nome = usuario['name']  # Obtém o nome do usuário
+            instituicao = usuario['instituição']  # Obtém a instituição do usuário (corrigido para 'instituição')
+
+            # Imprime o nome e a instituição do usuário
+            print(f'Nome: {nome} - Instituição: {instituicao}')
