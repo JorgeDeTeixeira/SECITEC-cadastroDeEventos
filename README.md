@@ -320,3 +320,25 @@ def menuPrincipal():
         else:
             print('OPÇÃO INVÁLIDA, TENTE NOVAMENTE!')
 
+import os
+
+def limparTerminal():
+    """
+    Limpa a tela do terminal.
+
+    Comportamento:
+        - Detecta o sistema operacional em uso (Windows ou não-Windows).
+        - Executa o comando apropriado para limpar a tela com base no sistema.
+
+    Retorna:
+        None
+    """
+    # Verifica se o sistema operacional é Windows (os.name == 'nt')
+    if os.name == 'nt':
+        # No Windows, utiliza 'cls' para limpar o terminal
+        os.system('cls')
+    else:
+        # Em sistemas não-Windows, utiliza 'clear' para limpar o terminal
+        os.system('clear')
+
+

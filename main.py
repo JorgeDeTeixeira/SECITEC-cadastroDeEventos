@@ -119,7 +119,7 @@ def validarSenha(password):
         linhaSimples()
         print('ERRO! Senha incorreta!')
         cont += 1
-        print(f'Mais {4 - cont} tentativas.')
+        print(f'Mais {3 - cont} tentativas.')
         linhaSimples()
         password = str(input('Informe a senha:')).strip()
 
@@ -252,6 +252,10 @@ def listarParticipantes():
             print(f'Nome: {nome} - Instituição: {instituicao}')
 
 
+def limparTerminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
 def menuPrincipal():
     while True:
 
@@ -283,5 +287,6 @@ def menuPrincipal():
             break
         else:
             print('OPÇÃO INVÁLIDA, TENTE NOVAMENTE!')
+
 
 menuPrincipal()
