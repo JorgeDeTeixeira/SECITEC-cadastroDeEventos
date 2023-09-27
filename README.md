@@ -273,3 +273,50 @@ Lista todos os usuários (administradores e usuários comuns) com seus nomes e i
 
             # Imprime o nome e a instituição do usuário
             print(f'Nome: {nome} - Instituição: {instituicao}')
+
+def menuPrincipal():
+    """
+    Exibe um menu de opções para o usuário e direciona para as funcionalidades correspondentes.
+
+    Comportamento:
+        - Apresenta um menu com opções numeradas.
+        - Solicita ao usuário que escolha uma opção.
+        - Direciona para a funcionalidade correspondente com base na escolha do usuário.
+        - Permite ao usuário sair do programa.
+
+    Retorna:
+        None
+    """
+    while True:
+        linha()
+        print(f'{"MENU DE OPÇÕES":^30}')
+        linha()
+
+        # Exibe as opções disponíveis no menu
+        print('1 - Cadastro de participantes.')
+        print('2 - Cadastro de eventos.')
+        print('3 - Listar todos os eventos.')
+        print('4 - Se cadastrar em eventos.')
+        print('5 - Gerar certificados.')
+        print('6 - Sair.')
+
+        opc = str(input('Informe sua opção: '))  # Solicita a escolha do usuário
+        limparTerminal()  # Limpa o terminal para melhorar a interface
+
+        # Verifica a escolha do usuário e direciona para a funcionalidade correspondente
+        if opc == '1':
+            cadastrarParticipante()
+        elif opc == '2':
+            cadastrarEvento()
+        elif opc == '3':
+            listarEventos()
+        elif opc == '4':
+            escolherEvento()
+        elif opc == '5':
+            gerarCertificados()
+        elif opc == '6':
+            print('OBRIGADO POR USAR NOSSO SISTEMA! FIM DO PROGRAMA!')
+            break  # Encerra o programa
+        else:
+            print('OPÇÃO INVÁLIDA, TENTE NOVAMENTE!')
+

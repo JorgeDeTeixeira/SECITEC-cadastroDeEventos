@@ -250,3 +250,38 @@ def listarParticipantes():
             nome = usuario['name']
             instituicao = usuario['instituição']
             print(f'Nome: {nome} - Instituição: {instituicao}')
+
+
+def menuPrincipal():
+    while True:
+
+        linha()
+        print(f'{"MENU DE OPÇÕES":^30}')
+        linha()
+
+        print('1 - Cadastro de participantes.')
+        print('2 - Cadastro de eventos.')
+        print('3 - Listar todos os eventos.')
+        print('4 - Se cadastrar em eventos.')
+        print('5 - Gerar certificados.')
+        print('6 - Sair.')
+        opc = str(input('Informe sua opção: '))
+        limparTerminal()
+
+        if opc == '1':
+            cadastrarParticipante()
+        elif opc == '2':
+            cadastrarEvento()
+        elif opc == '3':
+            listarEventos()
+        elif opc == '4':
+            escolherEvento()
+        elif opc == '5':
+            gerarCertificados()
+        elif opc == '6':
+            print('OBRIGADO POR USAR NOSSO SISTEMA! FIM DO PROGRAMA!')
+            break
+        else:
+            print('OPÇÃO INVÁLIDA, TENTE NOVAMENTE!')
+
+menuPrincipal()
