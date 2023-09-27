@@ -94,3 +94,125 @@ def validarSenha(password):
         if cont == 3:
             print('Tentativas esgotadas! Programa encerrado!')
             sys.exit()
+
+def cadastrarEvento():
+    """
+    Permite a um administrador cadastrar um evento (minicurso ou palestra).
+
+    Esta função interage com o usuário administrador para cadastrar um evento, incluindo nome, local, data, horário, 
+    carga horária e ministrante do evento. O administrador deve fornecer sua senha para acessar a função e pode 
+    escolher entre cadastrar um minicurso (M) ou uma palestra (P).
+
+    Retorna:
+        None
+
+    Comportamento:
+        - Solicita o nome do administrador com permissão de cadastro.
+        - Valida a senha do administrador.
+        - Permite ao administrador escolher entre cadastrar um minicurso ou palestra.
+        - Solicita informações do evento (nome, local, data, horário, carga horária e ministrante).
+        - Adiciona o evento à lista de eventos (minicursos ou palestras) apropriada.
+
+    Exemplo de uso:
+    cadastrarEvento()
+    # Comportamento dependente da interação do usuário.
+    """
+    linha()
+    tituloCentralizado('CADASTRO DE EVENTOS')
+    linha()
+
+    listarParticipantes()
+
+    nomeAdmin = str(input('Informe o nome do administrador com permissão de cadastro: ')
+                    ).strip().capitalize()
+
+    # Valida se o nome do administrador está na lista de administradores
+    if nomeAdmin in [admin['name'] for admin in users['admins']]:
+        senha = str(input('Informe a senha (3 tentativas):'))
+        validarSenha(senha)  # Chama a função para validar a senha do administrador
+
+        linha()
+        tituloCentralizado('ACESSO CONCEDIDO')
+        linha()
+
+        print('Opções de cadastro:')
+        print('M - Minicurso')
+        print('P - Palestra')
+
+        tipo = str(input(
+            'O que você deseja cadastrar? [M - minicurso | P - Palestra]:')).strip().upper()[0]
+
+        if tipo == 'M':
+            tipoEvento = 'Minicurso'
+        elif tipo == 'P':
+            tipoEvento = 'Palestra'
+        else:
+            print('Tipo de evento inválido.')
+            return
+
+        linha()
+        print(f'{f"Cadastro de {tipoEvento}":^30}')
+        linha()
+        nome = str(input('Nome do evento: '))
+
+        while not nome:
+            nome = str(input('Nome vazio. Nome do evento: '))
+
+        local = str(input('Informe o local: '))
+
+        while not local:
+            local = str(input('Local vazio. local do evento: '))
+
+        data = str(input('Informe a data (XX/XX/XXXX): '))
+
+        # Valida a formatação correta da data
+        while validarData(data) == False:
+            data = str(
+                input('Use o formato correto. Informe a data (XX/XX/XXXX): '))
+            if validarData(data):
+                break
+
+        horario = str(input('Informe o horario (XX:XX): '))
+
+        # Valida a formatação correta do horário
+        while validarHorario(horario) == False:
+            horario = str(
+                input('Use o formato correto. Informe o horario (XX:XX): '))
+            if validarHorario(horario):
+                break
+
+        while True:
+            cargaHoraria = str(input('Carga horária (em horas): ')).strip()
+            if cargaHoraria.isdigit() and int(cargaHoraria) > 0:
+                cargaHoraria = int(cargaHoraria)
+                break
+            else:
+                print('Valor de carga horária inválido. Informe um valor positivo.')
+
+        ministrante = str(input('Informe o ministrante:'))
+
+        while not ministrante:
+            ministrante = str(
+                input('Ministrante vazio. Informe o ministrante: '))
+
+        novoEvento = {
+            'tipo': tipo,
+            'nome': nome,
+            'data': data,
+            'local': local,
+            'horario': horario,
+            'cargaHoraria': cargaHoraria,
+            'ministrante': ministrante
+        }
+
+        # Adiciona o evento à lista apropriada (minicursos ou palestras)
+        if tipo == 'M':
+            eventos['minicursos'].append(novoEvento)
+        elif tipo == 'P':
+            eventos['palestras'].append(novoEvento)
+        else:
+            print('TIPO INVÁLIDO!')
+
+        print(f'{nome} adicionado com sucesso!')
+    else:
+        print('PERMISSÃO NEGADA!')
