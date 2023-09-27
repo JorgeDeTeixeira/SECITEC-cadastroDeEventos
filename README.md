@@ -9,3 +9,16 @@ Neste sistema, existem algumas especificações que o cliente gostaria que você
 3º Ao final do evento, o sistema deverá emitir ao usuário um certificado com a listagem de todos os minicursos e palestras que ele se inscreveu e a carga horária total sendo a soma das cargas horárias de todos os minicursos e palestras que ele participou. 
 
 Você sabiamente pensou e resolveu esse sistema usando estruturas condicionais, estruturas de repetição, listas, tuplas e dicionários.
+
+def linha():
+    """
+    Imprime uma linha de caracteres '=' para fins de formatação.
+
+    Esta função imprime uma linha de caracteres '=' para criar uma linha separadora ou de formatação em um texto.
+
+    Exemplo de uso:
+    linha()
+    # Saída:
+    # ==============================
+    """
+    print('=' * 30)
