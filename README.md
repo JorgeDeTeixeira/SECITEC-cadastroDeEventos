@@ -59,3 +59,38 @@ def tituloCentralizado(titulo):
     # "   Título do Evento   "
     """
     print(f'"{titulo:^30}"')
+
+def validarSenha(password):
+    """
+    Valida a senha fornecida em relação às senhas de administradores.
+
+    Esta função recebe uma senha como entrada e verifica se ela corresponde a uma das senhas armazenadas
+    na lista de senhas dos administradores.
+
+    Args:
+        password (str): A senha a ser validada.
+
+    Retorna:
+        None
+
+    Comportamento:
+        - A função entra em um loop enquanto a senha não corresponde a nenhuma das senhas dos administradores.
+        - Se a senha estiver incorreta após 3 tentativas, o programa é encerrado.
+
+    Exemplo de uso:
+    validarSenha("senha_admin")
+    # Comportamento dependente das senhas armazenadas na lista de administradores.
+    """
+    cont = 0
+
+    while password not in [admin['pass'] for admin in users['admins']]:
+        linhaSimples()
+        print('ERRO! Senha incorreta!')
+        cont += 1
+        print(f'Mais {4 - cont} tentativas.')
+        linhaSimples()
+        password = str(input('Informe a senha:')).strip()
+
+        if cont == 3:
+            print('Tentativas esgotadas! Programa encerrado!')
+            sys.exit()

@@ -95,9 +95,10 @@ users = {
     'user': [{'name': 'João',
               'telefone': '999999999',
               'instituição': 'UFERSA',
-              'minicursoSelecionados': [], 
+              'minicursoSelecionados': [],
               'palestrasSelecionadas': []}]
 }
+
 
 def linha():
     print('=' * 30)
@@ -106,5 +107,22 @@ def linha():
 def linhaSimples():
     print('-' * 30)
 
+
 def tituloCentralizado(titulo):
     print(f'"{titulo:^30}"')
+
+
+def validarSenha(password):
+    cont = 0
+
+    while password not in [admin['pass'] for admin in users['admins']]:
+        linhaSimples()
+        print('ERRO! Senha incorreta!')
+        cont += 1
+        print(f'Mais {4 - cont} tentativas.')
+        linhaSimples()
+        password = str(input('Informe a senha:')).strip()
+
+        if cont == 3:
+            print('Tentativas esgotadas! Programa encerrado!')
+            sys.exit()
