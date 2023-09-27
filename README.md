@@ -216,3 +216,38 @@ def cadastrarEvento():
         print(f'{nome} adicionado com sucesso!')
     else:
         print('PERMISSÃO NEGADA!')
+
+import datetime
+
+def validarData(data):
+    """
+    Valida o formato de data (XX/XX/XXXX).
+
+    Args:
+        data (str): A data a ser validada.
+
+    Returns:
+        bool: True se a data estiver no formato correto, False caso contrário.
+    """
+    try:
+        datetime.datetime.strptime(data, '%d/%m/%Y')
+        return True
+    except ValueError:
+        return False
+
+def validarHorario(horario):
+    """
+    Valida o formato de horário (XX:XX).
+
+    Args:
+        horario (str): O horário a ser validado.
+
+    Returns:
+        bool: True se o horário estiver no formato correto, False caso contrário.
+    """
+    try:
+        datetime.datetime.strptime(horario, '%H:%M')
+        return True
+    except ValueError:
+        return False
+

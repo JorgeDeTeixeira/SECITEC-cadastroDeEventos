@@ -225,3 +225,17 @@ def cadastrarEvento():
     else:
         print('PERMISSÃO NEGADA! Nome de administrador não encontrado ou senha incorreta.')
 
+def validarData(data):
+    try:
+        datetime.datetime.strptime(data, '%d/%m/%Y')
+        return True
+    except ValueError:
+        return False
+
+
+def validarHorario(horario):
+    try:
+        datetime.datetime.strptime(horario, '%H:%M')
+        return True
+    except ValueError:
+        return False
