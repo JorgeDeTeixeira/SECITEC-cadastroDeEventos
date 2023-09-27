@@ -42,3 +42,20 @@ def linhaSimples():
     # ------------------------------
     """
     print('-' * 30)
+
+def tituloCentralizado(titulo):
+    """
+    Imprime um título centralizado em um espaço de 30 caracteres.
+
+    Esta função recebe um título como argumento e o imprime centralizado em um espaço de 30 caracteres, 
+    com aspas duplas ao redor do título para destaque.
+
+    Args:
+        titulo (str): O título a ser centralizado e impresso.
+
+    Exemplo de uso:
+    tituloCentralizado("Título do Evento")
+    # Saída:
+    # "   Título do Evento   "
+    """
+    print(f'"{titulo:^30}"')

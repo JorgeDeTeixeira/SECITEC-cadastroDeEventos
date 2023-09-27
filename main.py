@@ -90,6 +90,14 @@ eventos = {
     ]
 }
 
+users = {
+    'admins': [{'name': 'Jorge', 'pass': '123456', 'telefone': 998360879, 'instituição': 'UFERSA'}],
+    'user': [{'name': 'João',
+              'telefone': '999999999',
+              'instituição': 'UFERSA',
+              'minicursoSelecionados': [], 
+              'palestrasSelecionadas': []}]
+}
 
 def linha():
     print('=' * 30)
@@ -97,3 +105,6 @@ def linha():
 
 def linhaSimples():
     print('-' * 30)
+
+def tituloCentralizado(titulo):
+    print(f'"{titulo:^30}"')
