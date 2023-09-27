@@ -22,3 +22,16 @@ def linha():
     # ==============================
     """
     print('=' * 30)
+
+def linhaSimples():
+    """
+    Imprime uma linha de caracteres '-' para fins de formatação simples.
+
+    Esta função imprime uma linha de caracteres '-' para criar uma linha separadora ou de formatação simples em um texto.
+
+    Exemplo de uso:
+    linhaSimples()
+    # Saída:
+    # ------------------------------
+    """
+    print('-' * 30)
