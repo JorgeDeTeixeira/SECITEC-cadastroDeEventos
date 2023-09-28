@@ -642,3 +642,26 @@ Gera certificados para os participantes com base nos eventos que selecionaram.
     else:
         # Caso o participante não seja encontrado, exibe uma mensagem de erro
         print(f'Participante "{participante}" não encontrado.')
+
+def calcularCargaHoraria(participante):
+    """
+    Calcula a carga horária total dos eventos inscritos por um participante.
+
+    Argumentos:
+        participante (dict): O dicionário contendo as informações do participante,
+            incluindo os eventos (minicursos e palestras) inscritos.
+
+    Retorna:
+        float: A carga horária total dos eventos inscritos pelo participante em horas.
+    """
+    cargaHorariaTotal = 0
+
+    # Itera sobre os minicursos inscritos pelo participante e soma suas cargas horárias
+    for evento in participante['minicursoSelecionados']:
+        cargaHorariaTotal += evento['cargaHoraria']
+
+    # Itera sobre as palestras inscritas pelo participante e soma suas cargas horárias
+    for evento in participante['palestrasSelecionadas']:
+        cargaHorariaTotal += evento['cargaHoraria']
+
+    return cargaHorariaTotal

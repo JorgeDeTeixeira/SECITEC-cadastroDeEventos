@@ -457,6 +457,18 @@ def gerarCertificados():
         print(f'Participante "{participante}" não encontrado.')
 
 
+def calcularCargaHoraria(participante):
+    cargaHorariaTotal = 0
+
+    for evento in participante['minicursoSelecionados']:
+        cargaHorariaTotal += evento['cargaHoraria']
+
+    for evento in participante['palestrasSelecionadas']:
+        cargaHorariaTotal += evento['cargaHoraria']
+
+    return cargaHorariaTotal
+
+
 def limparTerminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
