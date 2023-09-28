@@ -280,7 +280,7 @@ def cadastrarParticipante():
         'telefone': telefone,
         'instituição': instituição,
         'minicursoSelecionados': [],
-        'palestrasSelecionados': []
+        'palestrasSelecionadas': []
     }
 
     users['user'].append(novoParticipante)
@@ -406,61 +406,72 @@ def escolherEvento():
             break
 
 
-def gerarCertificados():
+def gerarCertificado():
     linha()
     tituloCentralizado('GERAR CERTIFICADOS')
     linha()
 
-    participante = str(
-        input('Informe o nome do participante: ')).strip().capitalize()
+    print('Lista de Participantes:')
+    for i, participante in enumerate(users['user']):
+        print(f'{i + 1}. {participante["name"]}')
 
-    participanteEncontrado = None
-    for user in users['user']:
-        if user['name'] == participante:
-            participanteEncontrado = user
-            break
+    while True:
+        try:
+            escolha = int(input('Selecione o número do participante: '))
+            if 1 <= escolha <= len(users['user']):
+                participante = users['user'][escolha - 1]
+                break
+            else:
+                print('Número de participante inválido. Tente novamente.')
+        except ValueError:
+            print('Número de participante inválido. Tente novamente.')
 
-    if participanteEncontrado is not None:
-        linha()
-        tituloCentralizado(
-            f'EVENTOS INSCRITOS POR PARTICIPANTE: {participante}')
-        linha()
+    linha()
+    tituloCentralizado(
+        f'EVENTOS INSCRITOS POR PARTICIPANTE: {participante["name"]}')
+    linha()
 
-        if 'minicursoSelecionados' in participanteEncontrado:
-            if participanteEncontrado['minicursoSelecionados']:
-                print('Minicursos inscritos:')
-                linhaSimples()
-                for evento in participanteEncontrado['minicursoSelecionados']:
-                    tituloCentralizado('Minicurso')
-                    print(f'Nome: {evento["nome"]}')
-                    print(f'Data: {evento["data"]}')
-                    print(f'Horário: {evento["horario"]}')
-                    print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-                    print(f'Ministrante: {evento["ministrante"]}')
-                    linha()
-        else:
-            print('O participante não se inscreveu em nenhum minucurso.')
+    if 'minicursoSelecionados' in participante:
+        print('Minicursos inscritos:')
+        linhaSimples()
+        for evento in participante['minicursoSelecionados']:
+            print(f'Nome: {evento["nome"]}')
+            print(f'Data: {evento["data"]}')
+            print(f'Horário: {evento["horario"]}')
+            print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+            print(f'Ministrante: {evento["ministrante"]}')
+            linha()
 
-        if 'palestrasSelecionadas' in participanteEncontrado:
-            if participanteEncontrado['palestrasSelecionadas']:
-                print('Palestras inscritas:')
-                linhaSimples()
-                for evento in participanteEncontrado['palestrasSelecionadas']:
-                    tituloCentralizado('Palestra')
-                    print(f'Nome: {evento["nome"]}')
-                    print(f'Data: {evento["data"]}')
-                    print(f'Horário: {evento["horario"]}')
-                    print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-                    print(f'Ministrante: {evento["ministrante"]}')
-                    linha()
-        else:
-            print('O participante não se inscreveu em nenhuma palestra.')
+    if 'palestrasSelecionadas' in participante:
+        print('Palestras inscritas:')
+        linhaSimples()
+        for evento in participante['palestrasSelecionadas']:
+            print(f'Nome: {evento["nome"]}')
+            print(f'Data: {evento["data"]}')
+            print(f'Horário: {evento["horario"]}')
+            print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+            print(f'Ministrante: {evento["ministrante"]}')
+            linha()
 
-        cargaTotal = calcularCargaHoraria(participanteEncontrado)
-        print(f'Carga Horária Total: {cargaTotal} horas')
+    # Calcular a carga horária total
+    carga_horaria_total = 0
+    if 'minicursoSelecionados' in participante:
+        carga_horaria_total += sum(
+            evento['cargaHoraria'] for evento in participante['minicursoSelecionados'])
+    if 'palestrasSelecionadas' in participante:
+        carga_horaria_total += sum(
+            evento['cargaHoraria'] for evento in participante['palestrasSelecionadas'])
 
-    else:
-        print(f'Participante "{participante}" não encontrado.')
+    print(f'Carga Horária Total: {carga_horaria_total} horas')
+
+    linha()
+
+    # Obter a data atual e formatá-la no certificado
+    data_atual = datetime.date.today()
+    data_emissao = data_atual.strftime('%d/%m/%Y')
+    print(f'Certificado emitido em {data_emissao}')
+
+    linha()
 
 
 def calcularCargaHoraria(participante):
@@ -473,6 +484,45 @@ def calcularCargaHoraria(participante):
         cargaHorariaTotal += evento['cargaHoraria']
 
     return cargaHorariaTotal
+
+
+def listarParticipantesComEventos():
+    linha()
+    tituloCentralizado('LISTA DE PARTICIPANTES COM EVENTOS')
+    linha()
+
+    for participante in users['user']:
+        nome = participante['name']
+        telefone = participante['telefone']
+        instituicao = participante['instituição']
+
+        print(f'Nome: {nome}')
+        print(f'Telefone: {telefone}')
+        print(f'Instituição: {instituicao}')
+
+        eventosInscritos = []
+
+        if 'minicursoSelecionados' in participante:
+            eventosInscritos.extend(participante['minicursoSelecionados'])
+
+        if 'palestrasSelecionadas' in participante:
+            eventosInscritos.extend(participante['palestrasSelecionadas'])
+
+        if eventosInscritos:
+            print('Eventos Inscritos:')
+            linhaSimples()
+            for evento in eventosInscritos:
+                tituloCentralizado(evento['tipo'])
+                print(f'Nome: {evento["nome"]}')
+                print(f'Data: {evento["data"]}')
+                print(f'Horário: {evento["horario"]}')
+                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+                print(f'Ministrante: {evento["ministrante"]}')
+                linha()
+        else:
+            print('O participante não está inscrito em nenhum evento.')
+
+        linha()
 
 
 def limparTerminal():
@@ -491,7 +541,8 @@ def menuPrincipal():
         print('3 - Listar todos os eventos.')
         print('4 - Se cadastrar em eventos.')
         print('5 - Gerar certificados.')
-        print('6 - Sair.')
+        print('6 - Listar os participantes.')
+        print('7 - Sair.')
         opc = str(input('Informe sua opção: '))
         limparTerminal()
 
@@ -504,8 +555,10 @@ def menuPrincipal():
         elif opc == '4':
             escolherEvento()
         elif opc == '5':
-            gerarCertificados()
+            gerarCertificado()
         elif opc == '6':
+            listarParticipantesComEventos()
+        elif opc == '7':
             print('OBRIGADO POR USAR NOSSO SISTEMA! FIM DO PROGRAMA!')
             break
         else:

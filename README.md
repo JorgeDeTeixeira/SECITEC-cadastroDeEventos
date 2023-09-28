@@ -664,3 +664,64 @@ Calcula a carga horária total dos eventos selecionados por um participante.
         cargaHorariaTotal += evento['cargaHoraria']  # Adiciona a carga horária da palestra.
 
     return cargaHorariaTotal  # Retorna a carga horária total.
+
+def listarParticipantesComEventos():
+"""
+Função que lista todos os participantes e os eventos em que estão inscritos.
+
+    Esta função percorre a lista de participantes e exibe informações sobre cada um,
+    incluindo nome, telefone, instituição e eventos inscritos (se houver).
+
+    Args:
+        Nenhum.
+
+    Returns:
+        Nenhum. A função apenas imprime informações na tela.
+
+    """
+    # Linha para separar a saída.
+    linha()
+    # Título centralizado para a seção.
+    tituloCentralizado('LISTA DE PARTICIPANTES COM EVENTOS')
+    # Linha para separar a saída.
+    linha()
+
+    # Loop através de todos os participantes.
+    for participante in users['user']:
+        nome = participante['name']
+        telefone = participante['telefone']
+        instituicao = participante['instituição']
+
+        # Imprime informações básicas do participante.
+        print(f'Nome: {nome}')
+        print(f'Telefone: {telefone}')
+        print(f'Instituição: {instituicao}')
+
+        eventosInscritos = []
+
+        # Verifica se o participante está inscrito em minicursos e palestras.
+        if 'minicursoSelecionados' in participante:
+            eventosInscritos.extend(participante['minicursoSelecionados'])
+
+        if 'palestrasSelecionadas' in participante:
+            eventosInscritos.extend(participante['palestrasSelecionadas'])
+
+        # Se o participante estiver inscrito em eventos, exibe os detalhes.
+        if eventosInscritos:
+            print('Eventos Inscritos:')
+            linhaSimples()
+            for evento in eventosInscritos:
+                # Título centralizado para indicar o tipo de evento (Minicurso ou Palestra).
+                tituloCentralizado(evento['tipo'])
+                print(f'Nome: {evento["nome"]}')
+                print(f'Data: {evento["data"]}')
+                print(f'Horário: {evento["horario"]}')
+                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+                print(f'Ministrante: {evento["ministrante"]}')
+                linha()
+        else:
+            # Se o participante não estiver inscrito em nenhum evento.
+            print('O participante não está inscrito em nenhum evento.')
+
+        # Linha para separar a saída entre os participantes.
+        linha()
