@@ -275,8 +275,8 @@ Lista todos os usuários (administradores e usuários comuns) com seus nomes e i
             print(f'Nome: {nome} - Instituição: {instituicao}')
 
 def menuPrincipal():
-    """
-    Exibe um menu de opções para o usuário e direciona para as funcionalidades correspondentes.
+"""
+Exibe um menu de opções para o usuário e direciona para as funcionalidades correspondentes.
 
     Comportamento:
         - Apresenta um menu com opções numeradas.
@@ -323,8 +323,8 @@ def menuPrincipal():
 import os
 
 def limparTerminal():
-    """
-    Limpa a tela do terminal.
+"""
+Limpa a tela do terminal.
 
     Comportamento:
         - Detecta o sistema operacional em uso (Windows ou não-Windows).
@@ -342,8 +342,8 @@ def limparTerminal():
         os.system('clear')
 
 def cadastrarParticipante():
-    """
-    Permite o cadastro de um novo participante no sistema.
+"""
+Permite o cadastro de um novo participante no sistema.
 
     Comportamento:
         - Solicita ao usuário as informações necessárias para o cadastro (nome, telefone e instituição).
@@ -398,8 +398,8 @@ def cadastrarParticipante():
     linha()
 
 def listarEventos():
-    """
-    Lista todos os eventos (minicursos e palestras) registrados no sistema.
+"""
+Lista todos os eventos (minicursos e palestras) registrados no sistema.
 
     Comportamento:
         - Exibe a lista de minicursos, incluindo informações como nome, data, local, horário, carga horária e ministrante.
@@ -442,3 +442,120 @@ def listarEventos():
         # Exibe uma linha horizontal para separar cada evento
         linha()
 
+def escolherEvento():
+"""
+Permite aos participantes selecionar eventos (minicursos e palestras) para participar.
+
+    Comportamento:
+        - Solicita ao usuário o nome do participante.
+        - Localiza o participante na lista de usuários comuns.
+        - Exibe a lista de eventos (minicursos e palestras) disponíveis.
+        - Permite que o participante selecione eventos de acordo com as regras (limite de minicursos e palestras).
+        - Adiciona os eventos selecionados à lista do participante.
+        - Possibilita a seleção de múltiplos eventos até atingir os limites máximos ou até o participante optar por encerrar.
+
+    Retorna:
+        None
+    """
+    # Exibe uma linha horizontal para separar visualmente a seção de seleção de eventos
+    linha()
+    # Título centralizado indicando a seção de seleção de participante
+    tituloCentralizado('SELECIONAR PARTICIPANTE')
+    # Exibe outra linha horizontal
+    linha()
+
+    # Lista todos os participantes disponíveis
+    listarParticipantes()
+
+    # Solicita o nome do participante a ser selecionado
+    nomeParticipante = str(
+        input('Informe o nome do participante: ')).strip().capitalize()
+
+    participante = None
+
+    # Localiza o participante na lista de usuários comuns
+    for user in users['user']:
+        if user['name'] == nomeParticipante:
+            participante = user
+            break
+
+    if participante is None:
+        print('Participante não encontrado!')
+        return
+
+    # Exibe uma linha horizontal para separar visualmente a seção de seleção de eventos
+    linha()
+    # Título centralizado indicando a seção de seleção de eventos
+    tituloCentralizado('SELECIONAR EVENTOS')
+    # Exibe outra linha horizontal
+    linha()
+
+    # Lista todos os eventos disponíveis (minicursos e palestras)
+    listarEventos()
+
+    # Obtém a seleção atual de minicursos e palestras do participante
+    selecaoMinicursos = participante.get('minicursoSelecionados', [])
+    selecaoPalestras = participante.get('palestrasSelecionadas', [])
+
+    maxMinicursos = 3  # Limite máximo de minicursos
+    maxPalestras = 4   # Limite máximo de palestras
+
+    while True:
+        # Verifica se o participante atingiu o limite máximo de minicursos e palestras
+        if len(selecaoMinicursos) >= maxMinicursos and len(selecaoPalestras) >= maxPalestras:
+            print('Você atingiu o limite máximo de minicursos e palestras.')
+            break
+
+        # Solicita o tipo de evento (Minicurso ou Palestra)
+        tipoEvento = input(
+            'Digite o tipo do evento (M - Minicurso ou P - Palestra): ').strip().upper()
+
+        if tipoEvento == 'M':
+            eventosDisponiveis = eventos['minicursos']
+            selecao = selecaoMinicursos
+            maxSelecao = maxMinicursos
+        elif tipoEvento == 'P':
+            eventosDisponiveis = eventos['palestras']
+            selecao = selecaoPalestras
+            maxSelecao = maxPalestras
+        else:
+            print(
+                'Tipo de evento inválido. Digite "M" para Minicurso ou "P" para Palestra.')
+            continue
+
+        if len(selecao) >= maxSelecao:
+            print(
+                f'Você já selecionou o máximo de {maxSelecao} eventos desse tipo.')
+            continuar = input(
+                'Deseja selecionar outro evento? (S/N): ').strip().upper()
+            if continuar != 'S':
+                break
+
+        try:
+            # Solicita o índice do evento a ser selecionado
+            indiceEvento = int(
+                input('Digite o índice do evento que deseja selecionar: '))
+            if 0 <= indiceEvento < len(eventosDisponiveis):
+                eventoSelecionado = eventosDisponiveis[indiceEvento]
+
+                if eventoSelecionado in selecao:
+                    print(
+                        f'Você já selecionou o evento "{eventoSelecionado["nome"]}".')
+                else:
+                    selecao.append(eventoSelecionado)
+                    # Adiciona o evento selecionado à lista do participante
+                    participante.setdefault(
+                        tipoEvento.lower() + 'Selecionadas', []).append(eventoSelecionado)
+                    linha()
+                    print(
+                        f'Evento "{eventoSelecionado["nome"]}" selecionado com sucesso!')
+                    linha()
+            else:
+                print('Índice do evento fora dos limites.')
+        except ValueError:
+            print('Índice do evento inválido. Digite um número válido.')
+
+        continuar = input(
+            'Deseja selecionar outro evento? (S/N): ').strip().upper()
+        if continuar != 'S':
+            break

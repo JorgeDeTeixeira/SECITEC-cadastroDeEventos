@@ -318,6 +318,94 @@ def listarEventos():
         linha()
 
 
+def escolherEvento():
+    linha()
+    tituloCentralizado('SELECIONAR PARTICIPANTE')
+    linha()
+
+    listarParticipantes()
+    nomeParticipante = str(
+        input('Informe o nome do participante: ')).strip().capitalize()
+
+    participante = None
+    for user in users['user']:
+        if user['name'] == nomeParticipante:
+            participante = user
+            break
+
+    if participante is None:
+        print('Participante não encontrado!')
+        return
+
+    linha()
+    tituloCentralizado('SELECIONAR EVENTOS')
+    linha()
+
+    listarEventos()
+
+    selecaoMinicursos = participante.get('minicursoSelecionados', [])
+    selecaoPalestras = participante.get('palestrasSelecionadas', [])
+
+    maxMinicursos = 3
+    maxPalestras = 4
+
+    while True:
+        if len(selecaoMinicursos) >= maxMinicursos and len(selecaoPalestras) >= maxPalestras:
+            print('Você atingiu o limite máximo de minicursos e palestras.')
+            break
+
+        tipoEvento = input(
+            'Digite o tipo do evento (M - Minicurso ou P - Palestra): ').strip().upper()
+
+        if tipoEvento == 'M':
+            eventosDisponiveis = eventos['minicursos']
+            selecao = selecaoMinicursos
+            maxSelecao = maxMinicursos
+        elif tipoEvento == 'P':
+            eventosDisponiveis = eventos['palestras']
+            selecao = selecaoPalestras
+            maxSelecao = maxPalestras
+        else:
+            print(
+                'Tipo de evento inválido. Digite "M" para Minicurso ou "P" para Palestra.')
+            continue
+
+        if len(selecao) >= maxSelecao:
+            print(
+                f'Você já selecionou o máximo de {maxSelecao} eventos desse tipo.')
+            continuar = input(
+                'Deseja selecionar outro evento? (S/N): ').strip().upper()
+            if continuar != 'S':
+                break
+
+        try:
+            indiceEvento = int(
+                input('Digite o índice do evento que deseja selecionar: '))
+            if 0 <= indiceEvento < len(eventosDisponiveis):
+                eventoSelecionado = eventosDisponiveis[indiceEvento]
+
+                if eventoSelecionado in selecao:
+                    print(
+                        f'Você já selecionou o evento "{eventoSelecionado["nome"]}".')
+                else:
+                    selecao.append(eventoSelecionado)
+                    participante.setdefault(
+                        tipoEvento.lower() + 'Selecionadas', []).append(eventoSelecionado)
+                    linha()
+                    print(
+                        f'Evento "{eventoSelecionado["nome"]}" selecionado com sucesso!')
+                    linha()
+            else:
+                print('Índice do evento fora dos limites.')
+        except ValueError:
+            print('Índice do evento inválido. Digite um número válido.')
+
+        continuar = input(
+            'Deseja selecionar outro evento? (S/N): ').strip().upper()
+        if continuar != 'S':
+            break
+
+
 def limparTerminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
