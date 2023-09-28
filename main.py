@@ -290,6 +290,32 @@ def cadastrarParticipante():
     linha()
 
 
+def listarEventos():
+    linha()
+    tituloCentralizado('LISTA DE EVENTOS')
+    linha()
+
+    print('Minicursos:')
+    for indice, evento in enumerate(eventos['minicursos']):
+        print(f'Índice: {indice}')
+        print(f'Nome: {evento["nome"]}')
+        print(f'Data: {evento["data"]}')
+        print(f'Local: {evento["local"]}')
+        print(f'Horário: {evento["horario"]}')
+        print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+        print(f'Ministrante: {evento["ministrante"]}')
+        linha()
+
+    print('Palestras:')
+    for indice, evento in enumerate(eventos['palestras']):
+        print(f'Índice: {indice}')
+        print(f'Nome: {evento["nome"]}')
+        print(f'Data: {evento["data"]}')
+        print(f'Local: {evento["local"]}')
+        print(f'Horário: {evento["horario"]}')
+        print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+        print(f'Ministrante: {evento["ministrante"]}')
+        linha()
 
 
 def limparTerminal():

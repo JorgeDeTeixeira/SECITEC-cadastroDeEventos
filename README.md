@@ -397,4 +397,48 @@ def cadastrarParticipante():
     # Exibe outra linha horizontal para separar visualmente
     linha()
 
+def listarEventos():
+    """
+    Lista todos os eventos (minicursos e palestras) registrados no sistema.
+
+    Comportamento:
+        - Exibe a lista de minicursos, incluindo informações como nome, data, local, horário, carga horária e ministrante.
+        - Exibe a lista de palestras, incluindo informações semelhantes.
+        - Cada evento é identificado por um índice.
+
+    Retorna:
+        None
+    """
+    # Exibe uma linha horizontal para separar visualmente a lista de eventos
+    linha()
+    # Título centralizado indicando a seção de lista de eventos
+    tituloCentralizado('LISTA DE EVENTOS')
+    # Exibe outra linha horizontal
+    linha()
+
+    # Lista os minicursos
+    print('Minicursos:')
+    for indice, evento in enumerate(eventos['minicursos']):
+        print(f'Índice: {indice}')
+        print(f'Nome: {evento["nome"]}')
+        print(f'Data: {evento["data"]}')
+        print(f'Local: {evento["local"]}')
+        print(f'Horário: {evento["horario"]}')
+        print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+        print(f'Ministrante: {evento["ministrante"]}')
+        # Exibe uma linha horizontal para separar cada evento
+        linha()
+
+    # Lista as palestras
+    print('Palestras:')
+    for indice, evento in enumerate(eventos['palestras']):
+        print(f'Índice: {indice}')
+        print(f'Nome: {evento["nome"]}')
+        print(f'Data: {evento["data"]}')
+        print(f'Local: {evento["local"]}')
+        print(f'Horário: {evento["horario"]}')
+        print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+        print(f'Ministrante: {evento["ministrante"]}')
+        # Exibe uma linha horizontal para separar cada evento
+        linha()
 
