@@ -252,6 +252,46 @@ def listarParticipantes():
             print(f'Nome: {nome} - Instituição: {instituicao}')
 
 
+def cadastrarParticipante():
+
+    linha()
+    tituloCentralizado('CADASTRO DE USUÁRIO')
+    linha()
+
+    name = str(input('Inform seu nome:')).strip().capitalize()
+
+    while not name:
+        name = input('Nome inválido. Informe seu nome: ').strip().capitalize()
+
+    telefone = str(input('Informe seu telefone (9 digitos apenas):'))
+
+    while not telefone.isdigit() or len(telefone) != 9:
+        telefone = str(input(
+            'Número de telefone inválido. Certifique-se de inserir 9 dígitos numéricos:'))
+
+    instituição = str(input('Instituição vinculado:')).strip().capitalize()
+
+    while not instituição:
+        instituição = input(
+            'Nome inválido. Informe seu nome: ').strip().capitalize()
+
+    novoParticipante = {
+        'name': name,
+        'telefone': telefone,
+        'instituição': instituição,
+        'minicursoSelecionados': [],
+        'palestrasSelecionados': []
+    }
+
+    users['user'].append(novoParticipante)
+
+    linha()
+    print(f'Usuário {name} adicionado com sucesso!')
+    linha()
+
+
+
+
 def limparTerminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 

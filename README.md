@@ -341,4 +341,60 @@ def limparTerminal():
         # Em sistemas não-Windows, utiliza 'clear' para limpar o terminal
         os.system('clear')
 
+def cadastrarParticipante():
+    """
+    Permite o cadastro de um novo participante no sistema.
+
+    Comportamento:
+        - Solicita ao usuário as informações necessárias para o cadastro (nome, telefone e instituição).
+        - Realiza validações para garantir que as informações inseridas sejam válidas.
+        - Cria um novo participante com as informações fornecidas e o adiciona à lista de usuários comuns.
+        - Imprime uma mensagem de confirmação após o cadastro.
+
+    Retorna:
+        None
+    """
+    # Exibe uma linha horizontal para separar visualmente o cadastro de participante
+    linha()
+    # Título centralizado indicando a seção de cadastro de usuário
+    tituloCentralizado('CADASTRO DE USUÁRIO')
+    # Exibe outra linha horizontal
+    linha()
+
+    # Solicita o nome do participante e valida
+    name = str(input('Informe seu nome:')).strip().capitalize()
+    while not name:
+        name = input('Nome inválido. Informe seu nome: ').strip().capitalize()
+
+    # Solicita o telefone do participante e valida
+    telefone = str(input('Informe seu telefone (9 dígitos apenas):'))
+    while not telefone.isdigit() or len(telefone) != 9:
+        telefone = str(input(
+            'Número de telefone inválido. Certifique-se de inserir 9 dígitos numéricos:'))
+
+    # Solicita a instituição do participante e valida
+    instituição = str(input('Instituição vinculada:')).strip().capitalize()
+    while not instituição:
+        instituição = input(
+            'Nome inválido. Informe sua instituição: ').strip().capitalize()
+
+    # Cria um dicionário representando o novo participante
+    novoParticipante = {
+        'name': name,
+        'telefone': telefone,
+        'instituição': instituição,
+        'minicursoSelecionados': [],
+        'palestrasSelecionados': []
+    }
+
+    # Adiciona o novo participante à lista de usuários comuns ('user')
+    users['user'].append(novoParticipante)
+
+    # Exibe uma linha horizontal para indicar o sucesso do cadastro
+    linha()
+    # Imprime uma mensagem de confirmação com o nome do participante cadastrado
+    print(f'Usuário {name} adicionado com sucesso!')
+    # Exibe outra linha horizontal para separar visualmente
+    linha()
+
 
