@@ -559,3 +559,86 @@ Permite aos participantes selecionar eventos (minicursos e palestras) para parti
             'Deseja selecionar outro evento? (S/N): ').strip().upper()
         if continuar != 'S':
             break
+
+def gerarCertificados():
+"""
+Gera certificados para os participantes com base nos eventos que selecionaram.
+
+    Comportamento:
+        - Solicita o nome do participante para o qual deseja gerar o certificado.
+        - Verifica se o participante existe na lista de usuários comuns.
+        - Lista os eventos (minicursos e palestras) inscritos pelo participante.
+        - Calcula a carga horária total dos eventos inscritos.
+        - Exibe as informações dos eventos e a carga horária total.
+        - Caso o participante não seja encontrado, exibe uma mensagem de erro.
+
+    Retorna:
+        None
+    """
+    # Exibe uma linha horizontal para separar visualmente a seção de geração de certificados
+    linha()
+    # Título centralizado indicando a seção de geração de certificados
+    tituloCentralizado('GERAR CERTIFICADOS')
+    # Exibe outra linha horizontal
+    linha()
+
+    # Solicita o nome do participante para o qual deseja gerar o certificado
+    participante = str(
+        input('Informe o nome do participante: ')).strip().capitalize()
+
+    participanteEncontrado = None
+
+    # Verifica se o participante existe na lista de usuários comuns
+    for user in users['user']:
+        if user['name'] == participante:
+            participanteEncontrado = user
+            break
+
+    if participanteEncontrado is not None:
+        # Exibe uma linha horizontal para separar visualmente a seção de eventos inscritos
+        linha()
+        # Título centralizado indicando a seção de eventos inscritos pelo participante
+        tituloCentralizado(
+            f'EVENTOS INSCRITOS POR PARTICIPANTE: {participante}')
+        # Exibe outra linha horizontal
+        linha()
+
+        # Lista os minicursos inscritos pelo participante
+        if participanteEncontrado['minicursoSelecionados']:
+            print('Minicursos inscritos:')
+            # Exibe uma linha horizontal simples para separar os eventos
+            linhaSimples()
+            for evento in participanteEncontrado['minicursoSelecionados']:
+                # Título centralizado indicando que é um Minicurso
+                tituloCentralizado('Minicurso')
+                print(f'Nome: {evento["nome"]}')
+                print(f'Data: {evento["data"]}')
+                print(f'Horário: {evento["horario"]}')
+                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+                print(f'Ministrante: {evento["ministrante"]}')
+                # Exibe uma linha horizontal simples para separar os eventos
+                linha()
+
+        # Lista as palestras inscritas pelo participante
+        if participanteEncontrado['palestrasSelecionadas']:
+            print('Palestras inscritas:')
+            # Exibe uma linha horizontal simples para separar os eventos
+            linhaSimples()
+            for evento in participanteEncontrado['palestrasSelecionadas']:
+                # Título centralizado indicando que é uma Palestra
+                tituloCentralizado('Palestra')
+                print(f'Nome: {evento["nome"]}')
+                print(f'Data: {evento["data"]}')
+                print(f'Horário: {evento["horario"]}')
+                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+                print(f'Ministrante: {evento["ministrante"]}')
+                # Exibe uma linha horizontal simples para separar os eventos
+                linha()
+
+        # Calcula a carga horária total dos eventos inscritos
+        cargaTotal = calcularCargaHoraria(participanteEncontrado)
+        print(f'Carga Horária Total: {cargaTotal} horas')
+
+    else:
+        # Caso o participante não seja encontrado, exibe uma mensagem de erro
+        print(f'Participante "{participante}" não encontrado.')

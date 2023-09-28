@@ -406,6 +406,57 @@ def escolherEvento():
             break
 
 
+def gerarCertificados():
+    linha()
+    tituloCentralizado('GERAR CERTIFICADOS')
+    linha()
+
+    participante = str(
+        input('Informe o nome do participante: ')).strip().capitalize()
+
+    participanteEncontrado = None
+    for user in users['user']:
+        if user['name'] == participante:
+            participanteEncontrado = user
+            break
+
+    if participanteEncontrado is not None:
+        linha()
+        tituloCentralizado(
+            f'EVENTOS INSCRITOS POR PARTICIPANTE: {participante}')
+        linha()
+
+        if participanteEncontrado['minicursoSelecionados']:
+            print('Minicursos inscritos:')
+            linhaSimples()
+            for evento in participanteEncontrado['minicursoSelecionados']:
+                tituloCentralizado('Minicurso')
+                print(f'Nome: {evento["nome"]}')
+                print(f'Data: {evento["data"]}')
+                print(f'Horário: {evento["horario"]}')
+                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+                print(f'Ministrante: {evento["ministrante"]}')
+                linha()
+
+        if participanteEncontrado['palestrasSelecionadas']:
+            print('Palestras inscritas:')
+            linhaSimples()
+            for evento in participanteEncontrado['palestrasSelecionadas']:
+                tituloCentralizado('Palestra')
+                print(f'Nome: {evento["nome"]}')
+                print(f'Data: {evento["data"]}')
+                print(f'Horário: {evento["horario"]}')
+                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
+                print(f'Ministrante: {evento["ministrante"]}')
+                linha()
+
+        cargaTotal = calcularCargaHoraria(participanteEncontrado)
+        print(f'Carga Horária Total: {cargaTotal} horas')
+
+    else:
+        print(f'Participante "{participante}" não encontrado.')
+
+
 def limparTerminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
