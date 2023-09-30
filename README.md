@@ -1,727 +1,409 @@
-Vamos supor que você foi contratado para criar um sistema de gerenciamento de eventos como o SECITEC.
-
-Neste sistema, existem algumas especificações que o cliente gostaria que você atendesse:
-
-1º O Cliente na condição de usuário admin pode cadastrar minicursos e palestras. Cada minicurso e palestra possui data, local, horário, carga horária e um ministrante.
-
-2º O participante na condição de usuário participante iria primeiro fornecer seus dados: nome, telefone e instituição que está vinculado. Depois disso, o usuário participante poderia selecionar até 3 minicursos e 4 palestras no máximo. Durante a seleção dos minicursos e palestras deve ser observado o choque de horários.
-
-3º Ao final do evento, o sistema deverá emitir ao usuário um certificado com a listagem de todos os minicursos e palestras que ele se inscreveu e a carga horária total sendo a soma das cargas horárias de todos os minicursos e palestras que ele participou.
-
-Você sabiamente pensou e resolveu esse sistema usando estruturas condicionais, estruturas de repetição, listas, tuplas e dicionários.
-
-#Bibliotecas importadas
-datetime: O módulo datetime fornece classes para manipulação de datas e horários. Ele permite que você trabalhe com datas, horários, intervalos de tempo e realize operações de formatação e cálculos de data e hora.
-
-os: O módulo os fornece funções para interagir com o sistema operacional subjacente. Você pode usá-lo para acessar o sistema de arquivos, listar diretórios, criar e excluir arquivos, manipular caminhos de arquivo, entre outras operações relacionadas ao sistema.
-
-sys: O módulo sys fornece acesso a variáveis e funções específicas do sistema. Ele é usado para interagir com o interpretador Python e o ambiente de execução, permitindo a manipulação de argumentos de linha de comando, saída padrão e outros recursos do sistema.
-
-def linha():
+def validatePassword(password):
 """
-Imprime uma linha de caracteres '=' para fins de formatação.
+Valida a senha de um administrador comparando-a com as senhas registradas.
 
-    Esta função imprime uma linha de caracteres '=' para criar uma linha separadora ou de formatação em um texto.
+    Parâmetros:
+    - password (str): A senha a ser validada.
 
-    Exemplo de uso:
-    linha()
-    # Saída:
-    # ==============================
-    """
-    print('=' * 30)
-
-def linhaSimples():
-"""
-Imprime uma linha de caracteres '-' para fins de formatação simples.
-
-    Esta função imprime uma linha de caracteres '-' para criar uma linha separadora ou de formatação simples em um texto.
-
-    Exemplo de uso:
-    linhaSimples()
-    # Saída:
-    # ------------------------------
-    """
-    print('-' * 30)
-
-def tituloCentralizado(titulo):
-"""
-Imprime um título centralizado em um espaço de 30 caracteres.
-
-    Esta função recebe um título como argumento e o imprime centralizado em um espaço de 30 caracteres,
-    com aspas duplas ao redor do título para destaque.
-
-    Args:
-        titulo (str): O título a ser centralizado e impresso.
-
-    Exemplo de uso:
-    tituloCentralizado("Título do Evento")
-    # Saída:
-    # "   Título do Evento   "
-    """
-    print(f'"{titulo:^30}"')
-
-def validarSenha(password):
-"""
-Valida a senha fornecida em relação às senhas de administradores.
-
-    Esta função recebe uma senha como entrada e verifica se ela corresponde a uma das senhas armazenadas
-    na lista de senhas dos administradores.
-
-    Args:
-        password (str): A senha a ser validada.
-
-    Retorna:
-        None
+    Retorno:
+    - bool: Retorna True se a senha estiver correta, caso contrário, False.
 
     Comportamento:
-        - A função entra em um loop enquanto a senha não corresponde a nenhuma das senhas dos administradores.
-        - Se a senha estiver incorreta após 3 tentativas, o programa é encerrado.
+    1. A função recebe uma senha como entrada e verifica se essa senha está presente na lista de senhas dos administradores.
 
-    Exemplo de uso:
-    validarSenha("senha_admin")
-    # Comportamento dependente das senhas armazenadas na lista de administradores.
-    """
-    cont = 0
+    2. Se a senha fornecida corresponder a uma das senhas dos administradores, a função retorna True, indicando que a senha está correta.
 
-    while password not in [admin['pass'] for admin in users['admins']]:
-        linhaSimples()
-        print('ERRO! Senha incorreta!')
-        cont += 1
-        print(f'Mais {4 - cont} tentativas.')
-        linhaSimples()
-        password = str(input('Informe a senha:')).strip()
+    3. Se a senha fornecida não corresponder a nenhuma das senhas dos administradores, a função retorna False, indicando que a senha é incorreta.
 
-        if cont == 3:
-            print('Tentativas esgotadas! Programa encerrado!')
-            sys.exit()
+    Uso:
+    Esta função é utilizada para validar a senha de um administrador durante operações que exigem permissões especiais.
 
-def cadastrarEvento():
-"""
-Permite a um administrador cadastrar um evento (minicurso ou palestra).
-
-    Esta função interage com o usuário administrador para cadastrar um evento, incluindo nome, local, data, horário,
-    carga horária e ministrante do evento. O administrador deve fornecer sua senha para acessar a função e pode
-    escolher entre cadastrar um minicurso (M) ou uma palestra (P).
-
-    Retorna:
-        None
-
-    Comportamento:
-        - Solicita o nome do administrador com permissão de cadastro.
-        - Valida a senha do administrador.
-        - Permite ao administrador escolher entre cadastrar um minicurso ou palestra.
-        - Solicita informações do evento (nome, local, data, horário, carga horária e ministrante).
-        - Adiciona o evento à lista de eventos (minicursos ou palestras) apropriada.
-
-    Exemplo de uso:
-    cadastrarEvento()
-    # Comportamento dependente da interação do usuário.
-    """
-    linha()
-    tituloCentralizado('CADASTRO DE EVENTOS')
-    linha()
-
-    listarParticipantes()
-
-    nomeAdmin = str(input('Informe o nome do administrador com permissão de cadastro: ')
-                    ).strip().capitalize()
-
-    # Valida se o nome do administrador está na lista de administradores
-    if nomeAdmin in [admin['name'] for admin in users['admins']]:
-        senha = str(input('Informe a senha (3 tentativas):'))
-        validarSenha(senha)  # Chama a função para validar a senha do administrador
-
-        linha()
-        tituloCentralizado('ACESSO CONCEDIDO')
-        linha()
-
-        print('Opções de cadastro:')
-        print('M - Minicurso')
-        print('P - Palestra')
-
-        tipo = str(input(
-            'O que você deseja cadastrar? [M - minicurso | P - Palestra]:')).strip().upper()[0]
-
-        if tipo == 'M':
-            tipoEvento = 'Minicurso'
-        elif tipo == 'P':
-            tipoEvento = 'Palestra'
-        else:
-            print('Tipo de evento inválido.')
-            return
-
-        linha()
-        print(f'{f"Cadastro de {tipoEvento}":^30}')
-        linha()
-        nome = str(input('Nome do evento: '))
-
-        while not nome:
-            nome = str(input('Nome vazio. Nome do evento: '))
-
-        local = str(input('Informe o local: '))
-
-        while not local:
-            local = str(input('Local vazio. local do evento: '))
-
-        data = str(input('Informe a data (XX/XX/XXXX): '))
-
-        # Valida a formatação correta da data
-        while validarData(data) == False:
-            data = str(
-                input('Use o formato correto. Informe a data (XX/XX/XXXX): '))
-            if validarData(data):
-                break
-
-        horario = str(input('Informe o horario (XX:XX): '))
-
-        # Valida a formatação correta do horário
-        while validarHorario(horario) == False:
-            horario = str(
-                input('Use o formato correto. Informe o horario (XX:XX): '))
-            if validarHorario(horario):
-                break
-
-        while True:
-            cargaHoraria = str(input('Carga horária (em horas): ')).strip()
-            if cargaHoraria.isdigit() and int(cargaHoraria) > 0:
-                cargaHoraria = int(cargaHoraria)
-                break
-            else:
-                print('Valor de carga horária inválido. Informe um valor positivo.')
-
-        ministrante = str(input('Informe o ministrante:'))
-
-        while not ministrante:
-            ministrante = str(
-                input('Ministrante vazio. Informe o ministrante: '))
-
-        novoEvento = {
-            'tipo': tipo,
-            'nome': nome,
-            'data': data,
-            'local': local,
-            'horario': horario,
-            'cargaHoraria': cargaHoraria,
-            'ministrante': ministrante
-        }
-
-        # Adiciona o evento à lista apropriada (minicursos ou palestras)
-        if tipo == 'M':
-            eventos['minicursos'].append(novoEvento)
-        elif tipo == 'P':
-            eventos['palestras'].append(novoEvento)
-        else:
-            print('TIPO INVÁLIDO!')
-
-        print(f'{nome} adicionado com sucesso!')
-    else:
-        print('PERMISSÃO NEGADA!')
-
-def validarData(data):
-"""
-Valida o formato de data (XX/XX/XXXX).
-
-    Args:
-        data (str): A data a ser validada.
-
-    Returns:
-        bool: True se a data estiver no formato correto, False caso contrário.
-    """
-    try:
-        datetime.datetime.strptime(data, '%d/%m/%Y')
-        return True
-    except ValueError:
-        return False
-
-def validarHorario(horario):
-"""
-Valida o formato de horário (XX:XX).
-
-    Args:
-        horario (str): O horário a ser validado.
-
-    Returns:
-        bool: True se o horário estiver no formato correto, False caso contrário.
-    """
-    try:
-        datetime.datetime.strptime(horario, '%H:%M')
-        return True
-    except ValueError:
-        return False
-
-def listarParticipantes():
-"""
-Lista todos os usuários (administradores e usuários comuns) com seus nomes e instituições.
-
-    Comportamento:
-        - Imprime os nomes e instituições de todos os administradores e usuários comuns registrados.
-
-    Retorna:
-        None
-    """
-    # Título centralizado para indicar a seção de listagem de participantes
-    print(f"{'Todos os Usuários:':^30}")
-
-    # Linha horizontal para separar a lista dos participantes
-    linha()
-
-    # Itera sobre as listas de administradores e usuários
-    for lista in ['admins', 'user']:
-        for usuario in users[lista]:
-            nome = usuario['name']  # Obtém o nome do usuário
-            instituicao = usuario['instituição']  # Obtém a instituição do usuário (corrigido para 'instituição')
-
-            # Imprime o nome e a instituição do usuário
-            print(f'Nome: {nome} - Instituição: {instituicao}')
-
-def menuPrincipal():
-"""
-Exibe um menu de opções para o usuário e direciona para as funcionalidades correspondentes.
-
-    Comportamento:
-        - Apresenta um menu com opções numeradas.
-        - Solicita ao usuário que escolha uma opção.
-        - Direciona para a funcionalidade correspondente com base na escolha do usuário.
-        - Permite ao usuário sair do programa.
-
-    Retorna:
-        None
-    """
-    while True:
-        linha()
-        print(f'{"MENU DE OPÇÕES":^30}')
-        linha()
-
-        # Exibe as opções disponíveis no menu
-        print('1 - Cadastro de participantes.')
-        print('2 - Cadastro de eventos.')
-        print('3 - Listar todos os eventos.')
-        print('4 - Se cadastrar em eventos.')
-        print('5 - Gerar certificados.')
-        print('6 - Sair.')
-
-        opc = str(input('Informe sua opção: '))  # Solicita a escolha do usuário
-        limparTerminal()  # Limpa o terminal para melhorar a interface
-
-        # Verifica a escolha do usuário e direciona para a funcionalidade correspondente
-        if opc == '1':
-            cadastrarParticipante()
-        elif opc == '2':
-            cadastrarEvento()
-        elif opc == '3':
-            listarEventos()
-        elif opc == '4':
-            escolherEvento()
-        elif opc == '5':
-            gerarCertificados()
-        elif opc == '6':
-            print('OBRIGADO POR USAR NOSSO SISTEMA! FIM DO PROGRAMA!')
-            break  # Encerra o programa
-        else:
-            print('OPÇÃO INVÁLIDA, TENTE NOVAMENTE!')
-
-import os
-
-def limparTerminal():
-"""
-Limpa a tela do terminal.
-
-    Comportamento:
-        - Detecta o sistema operacional em uso (Windows ou não-Windows).
-        - Executa o comando apropriado para limpar a tela com base no sistema.
-
-    Retorna:
-        None
-    """
-    # Verifica se o sistema operacional é Windows (os.name == 'nt')
-    if os.name == 'nt':
-        # No Windows, utiliza 'cls' para limpar o terminal
-        os.system('cls')
-    else:
-        # Em sistemas não-Windows, utiliza 'clear' para limpar o terminal
-        os.system('clear')
-
-def cadastrarParticipante():
-"""
-Permite o cadastro de um novo participante no sistema.
-
-    Comportamento:
-        - Solicita ao usuário as informações necessárias para o cadastro (nome, telefone e instituição).
-        - Realiza validações para garantir que as informações inseridas sejam válidas.
-        - Cria um novo participante com as informações fornecidas e o adiciona à lista de usuários comuns.
-        - Imprime uma mensagem de confirmação após o cadastro.
-
-    Retorna:
-        None
-    """
-    # Exibe uma linha horizontal para separar visualmente o cadastro de participante
-    linha()
-    # Título centralizado indicando a seção de cadastro de usuário
-    tituloCentralizado('CADASTRO DE USUÁRIO')
-    # Exibe outra linha horizontal
-    linha()
-
-    # Solicita o nome do participante e valida
-    name = str(input('Informe seu nome:')).strip().capitalize()
-    while not name:
-        name = input('Nome inválido. Informe seu nome: ').strip().capitalize()
-
-    # Solicita o telefone do participante e valida
-    telefone = str(input('Informe seu telefone (9 dígitos apenas):'))
-    while not telefone.isdigit() or len(telefone) != 9:
-        telefone = str(input(
-            'Número de telefone inválido. Certifique-se de inserir 9 dígitos numéricos:'))
-
-    # Solicita a instituição do participante e valida
-    instituição = str(input('Instituição vinculada:')).strip().capitalize()
-    while not instituição:
-        instituição = input(
-            'Nome inválido. Informe sua instituição: ').strip().capitalize()
-
-    # Cria um dicionário representando o novo participante
-    novoParticipante = {
-        'name': name,
-        'telefone': telefone,
-        'instituição': instituição,
-        'minicursoSelecionados': [],
-        'palestrasSelecionados': []
+    Exemplo:
+    users = {
+        'administrators': [{'name': 'Admin1', 'password': '123456'}, {'name': 'Admin2', 'password': 'abcdef'}]
     }
+    validatePassword('123456')  # Retorna True
+    validatePassword('qwerty')  # Retorna False
 
-    # Adiciona o novo participante à lista de usuários comuns ('user')
-    users['user'].append(novoParticipante)
+    Observações:
+    - As senhas dos administradores são armazenadas em uma lista de dicionários no formato {'name': 'Nome', 'password': 'Senha'}.
+    - Esta função é útil para garantir que apenas administradores com senhas válidas possam realizar determinadas ações no sistema.
+    """
 
-    # Exibe uma linha horizontal para indicar o sucesso do cadastro
-    linha()
-    # Imprime uma mensagem de confirmação com o nome do participante cadastrado
-    print(f'Usuário {name} adicionado com sucesso!')
-    # Exibe outra linha horizontal para separar visualmente
-    linha()
-
-def listarEventos():
+def validateDate(date):
 """
-Lista todos os eventos (minicursos e palestras) registrados no sistema.
+Valida se uma string de data está no formato correto (DD/MM/AAAA).
+
+    Parâmetros:
+    - date (str): A string contendo a data a ser validada.
+
+    Retorno:
+    - bool: Retorna True se a data estiver no formato correto, caso contrário, retorna False.
 
     Comportamento:
-        - Exibe a lista de minicursos, incluindo informações como nome, data, local, horário, carga horária e ministrante.
-        - Exibe a lista de palestras, incluindo informações semelhantes.
-        - Cada evento é identificado por um índice.
+    1. Tenta criar um objeto datetime a partir da string de data usando o formato "%d/%m/%Y".
 
-    Retorna:
-        None
+    2. Se a conversão for bem-sucedida, a data é considerada válida e a função retorna True.
+
+    3. Se ocorrer uma exceção ValueError durante a conversão, a data é considerada inválida e a função retorna False.
+
+    Uso:
+    Esta função pode ser usada para validar se uma string de data está no formato correto (DD/MM/AAAA).
+
+    Exemplo:
+    validateDate("20/09/2023")  # Retorna True
+    validateDate("30/02/2023")  # Retorna False
+
+    Observações:
+    - O formato aceito é DD/MM/AAAA (dia, mês e ano).
+    - Esta função é útil para garantir que as datas informadas pelo usuário estejam em um formato válido antes de serem utilizadas em outras partes do sistema.
     """
-    # Exibe uma linha horizontal para separar visualmente a lista de eventos
-    linha()
-    # Título centralizado indicando a seção de lista de eventos
-    tituloCentralizado('LISTA DE EVENTOS')
-    # Exibe outra linha horizontal
-    linha()
 
-    # Lista os minicursos
-    print('Minicursos:')
-    for indice, evento in enumerate(eventos['minicursos']):
-        print(f'Índice: {indice}')
-        print(f'Nome: {evento["nome"]}')
-        print(f'Data: {evento["data"]}')
-        print(f'Local: {evento["local"]}')
-        print(f'Horário: {evento["horario"]}')
-        print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-        print(f'Ministrante: {evento["ministrante"]}')
-        # Exibe uma linha horizontal para separar cada evento
-        linha()
-
-    # Lista as palestras
-    print('Palestras:')
-    for indice, evento in enumerate(eventos['palestras']):
-        print(f'Índice: {indice}')
-        print(f'Nome: {evento["nome"]}')
-        print(f'Data: {evento["data"]}')
-        print(f'Local: {evento["local"]}')
-        print(f'Horário: {evento["horario"]}')
-        print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-        print(f'Ministrante: {evento["ministrante"]}')
-        # Exibe uma linha horizontal para separar cada evento
-        linha()
-
-def escolherEvento():
+def validateHours(hours):
 """
-Permite aos participantes selecionar eventos (minicursos e palestras) para participar.
+Valida se uma string de horário está no formato correto (HH:MM).
+
+    Parâmetros:
+    - hours (str): A string contendo o horário a ser validado.
+
+    Retorno:
+    - bool: Retorna True se o horário estiver no formato correto, caso contrário, retorna False.
 
     Comportamento:
-        - Solicita ao usuário o nome do participante.
-        - Localiza o participante na lista de usuários comuns.
-        - Exibe a lista de eventos (minicursos e palestras) disponíveis.
-        - Permite que o participante selecione eventos de acordo com as regras (limite de minicursos e palestras).
-        - Adiciona os eventos selecionados à lista do participante.
-        - Possibilita a seleção de múltiplos eventos até atingir os limites máximos ou até o participante optar por encerrar.
+    1. Tenta criar um objeto datetime a partir da string de horário usando o formato "%H:%M".
 
-    Retorna:
-        None
+    2. Se a conversão for bem-sucedida, o horário é considerado válido e a função retorna True.
+
+    3. Se ocorrer uma exceção ValueError durante a conversão, o horário é considerado inválido e a função retorna False.
+
+    Uso:
+    Esta função pode ser usada para validar se uma string de horário está no formato correto (HH:MM).
+
+    Exemplo:
+    validateHours("09:30")  # Retorna True
+    validateHours("25:00")  # Retorna False
+
+    Observações:
+    - O formato aceito é de 24 horas (HH:MM).
+    - Esta função é útil para garantir que os horários informados pelo usuário estejam em um formato válido antes de serem utilizados em outras partes do sistema.
     """
-    # Exibe uma linha horizontal para separar visualmente a seção de seleção de eventos
-    linha()
-    # Título centralizado indicando a seção de seleção de participante
-    tituloCentralizado('SELECIONAR PARTICIPANTE')
-    # Exibe outra linha horizontal
-    linha()
 
-    # Lista todos os participantes disponíveis
-    listarParticipantes()
-
-    # Solicita o nome do participante a ser selecionado
-    nomeParticipante = str(
-        input('Informe o nome do participante: ')).strip().capitalize()
-
-    participante = None
-
-    # Localiza o participante na lista de usuários comuns
-    for user in users['user']:
-        if user['name'] == nomeParticipante:
-            participante = user
-            break
-
-    if participante is None:
-        print('Participante não encontrado!')
-        return
-
-    # Exibe uma linha horizontal para separar visualmente a seção de seleção de eventos
-    linha()
-    # Título centralizado indicando a seção de seleção de eventos
-    tituloCentralizado('SELECIONAR EVENTOS')
-    # Exibe outra linha horizontal
-    linha()
-
-    # Lista todos os eventos disponíveis (minicursos e palestras)
-    listarEventos()
-
-    # Obtém a seleção atual de minicursos e palestras do participante
-    selecaoMinicursos = participante.get('minicursoSelecionados', [])
-    selecaoPalestras = participante.get('palestrasSelecionadas', [])
-
-    maxMinicursos = 3  # Limite máximo de minicursos
-    maxPalestras = 4   # Limite máximo de palestras
-
-    while True:
-        # Verifica se o participante atingiu o limite máximo de minicursos e palestras
-        if len(selecaoMinicursos) >= maxMinicursos and len(selecaoPalestras) >= maxPalestras:
-            print('Você atingiu o limite máximo de minicursos e palestras.')
-            break
-
-        # Solicita o tipo de evento (Minicurso ou Palestra)
-        tipoEvento = input(
-            'Digite o tipo do evento (M - Minicurso ou P - Palestra): ').strip().upper()
-
-        if tipoEvento == 'M':
-            eventosDisponiveis = eventos['minicursos']
-            selecao = selecaoMinicursos
-            maxSelecao = maxMinicursos
-        elif tipoEvento == 'P':
-            eventosDisponiveis = eventos['palestras']
-            selecao = selecaoPalestras
-            maxSelecao = maxPalestras
-        else:
-            print(
-                'Tipo de evento inválido. Digite "M" para Minicurso ou "P" para Palestra.')
-            continue
-
-        if len(selecao) >= maxSelecao:
-            print(
-                f'Você já selecionou o máximo de {maxSelecao} eventos desse tipo.')
-            continuar = input(
-                'Deseja selecionar outro evento? (S/N): ').strip().upper()
-            if continuar != 'S':
-                break
-
-        try:
-            # Solicita o índice do evento a ser selecionado
-            indiceEvento = int(
-                input('Digite o índice do evento que deseja selecionar: '))
-            if 0 <= indiceEvento < len(eventosDisponiveis):
-                eventoSelecionado = eventosDisponiveis[indiceEvento]
-
-                if eventoSelecionado in selecao:
-                    print(
-                        f'Você já selecionou o evento "{eventoSelecionado["nome"]}".')
-                else:
-                    selecao.append(eventoSelecionado)
-                    # Adiciona o evento selecionado à lista do participante
-                    participante.setdefault(
-                        tipoEvento.lower() + 'Selecionadas', []).append(eventoSelecionado)
-                    linha()
-                    print(
-                        f'Evento "{eventoSelecionado["nome"]}" selecionado com sucesso!')
-                    linha()
-            else:
-                print('Índice do evento fora dos limites.')
-        except ValueError:
-            print('Índice do evento inválido. Digite um número válido.')
-
-        continuar = input(
-            'Deseja selecionar outro evento? (S/N): ').strip().upper()
-        if continuar != 'S':
-            break
-
-def gerarCertificados():
+def back():
 """
-Gera certificados para os participantes com base nos eventos que selecionaram.
+Esta função permite ao usuário voltar ao menu principal do sistema pressionando a tecla 'Q'.
+
+    Parâmetros:
+    Nenhum
 
     Comportamento:
-        - Solicita o nome do participante para o qual deseja gerar o certificado.
-        - Verifica se o participante existe na lista de usuários comuns.
-        - Lista os eventos (minicursos e palestras) inscritos pelo participante.
-        - Calcula a carga horária total dos eventos inscritos.
-        - Exibe as informações dos eventos e a carga horária total.
-        - Caso o participante não seja encontrado, exibe uma mensagem de erro.
+    1. Imprime a mensagem "Pressione 'Q' para sair" para informar ao usuário como sair do menu atual.
 
-    Retorna:
-        None
+    2. Desenha uma linha horizontal simples para fins de formatação.
+
+    3. Inicia um loop que aguarda até que o usuário pressione a tecla 'Q' para sair.
+
+    4. Quando 'Q' é pressionado, exibe uma mensagem indicando que o usuário está voltando para o menu principal.
+
+    Uso:
+    A função 'back' é usada para permitir que o usuário saia de um menu ou tela secundária e retorne ao menu principal.
+
+    Exemplo:
+    back()
+
+    Observações:
+    - A função utiliza um loop para aguardar a tecla 'Q' e, portanto, é adequada para situações em que o usuário precisa
+      interagir com a interface do sistema antes de retornar ao menu principal.
     """
-    # Exibe uma linha horizontal para separar visualmente a seção de geração de certificados
-    linha()
-    # Título centralizado indicando a seção de geração de certificados
-    tituloCentralizado('GERAR CERTIFICADOS')
-    # Exibe outra linha horizontal
-    linha()
 
-    # Solicita o nome do participante para o qual deseja gerar o certificado
-    participante = str(
-        input('Informe o nome do participante: ')).strip().capitalize()
-
-    participanteEncontrado = None
-
-    # Verifica se o participante existe na lista de usuários comuns
-    for user in users['user']:
-        if user['name'] == participante:
-            participanteEncontrado = user
-            break
-
-    if participanteEncontrado is not None:
-        # Exibe uma linha horizontal para separar visualmente a seção de eventos inscritos
-        linha()
-        # Título centralizado indicando a seção de eventos inscritos pelo participante
-        tituloCentralizado(
-            f'EVENTOS INSCRITOS POR PARTICIPANTE: {participante}')
-        # Exibe outra linha horizontal
-        linha()
-
-        # Lista os minicursos inscritos pelo participante
-        if participanteEncontrado['minicursoSelecionados']:
-            print('Minicursos inscritos:')
-            # Exibe uma linha horizontal simples para separar os eventos
-            linhaSimples()
-            for evento in participanteEncontrado['minicursoSelecionados']:
-                # Título centralizado indicando que é um Minicurso
-                tituloCentralizado('Minicurso')
-                print(f'Nome: {evento["nome"]}')
-                print(f'Data: {evento["data"]}')
-                print(f'Horário: {evento["horario"]}')
-                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-                print(f'Ministrante: {evento["ministrante"]}')
-                # Exibe uma linha horizontal simples para separar os eventos
-                linha()
-
-        # Lista as palestras inscritas pelo participante
-        if participanteEncontrado['palestrasSelecionadas']:
-            print('Palestras inscritas:')
-            # Exibe uma linha horizontal simples para separar os eventos
-            linhaSimples()
-            for evento in participanteEncontrado['palestrasSelecionadas']:
-                # Título centralizado indicando que é uma Palestra
-                tituloCentralizado('Palestra')
-                print(f'Nome: {evento["nome"]}')
-                print(f'Data: {evento["data"]}')
-                print(f'Horário: {evento["horario"]}')
-                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-                print(f'Ministrante: {evento["ministrante"]}')
-                # Exibe uma linha horizontal simples para separar os eventos
-                linha()
-
-        # Calcula a carga horária total dos eventos inscritos
-        cargaTotal = calcularCargaHoraria(participanteEncontrado)
-        print(f'Carga Horária Total: {cargaTotal} horas')
-
-    else:
-        # Caso o participante não seja encontrado, exibe uma mensagem de erro
-        print(f'Participante "{participante}" não encontrado.')
-
-def calcularCargaHoraria(participante):
+def registerParticipant():
 """
-Calcula a carga horária total dos eventos selecionados por um participante.
+Esta função permite o cadastro de novos participantes no sistema, coletando informações como nome, telefone, e instituição
+vinculada. Também realiza validações para garantir que os dados fornecidos sejam adequados.
 
-    Args:
-        participante (dict): Um dicionário representando um participante com eventos selecionados.
+    Parâmetros:
+    Nenhum
+
+    Comportamento:
+    1. Desenha uma linha horizontal para fins de formatação e legibilidade.
+
+    2. Imprime um título centralizado "CADASTRO DE PARTICIPANTE" para identificar a seção de cadastro de participantes.
+
+    3. Solicita ao usuário as seguintes informações:
+       - Nome do participante.
+       - Telefone celular (9 dígitos).
+       - Instituição vinculada ao participante.
+
+    4. Realiza validações para garantir que os dados fornecidos sejam adequados:
+       - O nome não pode estar em branco.
+       - O telefone celular deve ter exatamente 9 dígitos numéricos.
+       - O nome da instituição não pode estar em branco.
+
+    5. Cria um dicionário com as informações do novo participante, incluindo nome, telefone, instituição, e listas vazias de
+       minicursos e palestras selecionadas.
+
+    6. Adiciona o novo participante à lista de participantes no dicionário 'users'.
+
+    7. Imprime uma mensagem de sucesso informando que o participante foi adicionado com sucesso ao sistema.
+
+    8. Inicia um loop que aguarda até que o usuário pressione a tecla 'Q' para sair.
+
+    9. Quando 'Q' é pressionado, exibe uma mensagem indicando que o usuário está voltando para o menu principal.
+
+    10. A função aguarda por 2 segundos antes de encerrar a execução.
+
+    Uso:
+    A função 'registerParticipant' é usada para coletar informações de um novo participante, validar essas informações e
+    adicioná-lo ao sistema.
+
+    Exemplo:
+    registerParticipant()
+
+    Observações:
+    - A função realiza validações para garantir a integridade dos dados fornecidos pelo usuário.
+    - O participante é adicionado à lista de participantes no dicionário 'users' para futura referência.
+    - A função utiliza um loop para aguardar a tecla 'Q' para sair, proporcionando tempo ao usuário para ler a mensagem de sucesso.
+    """
+
+def registerEvent():
+"""
+Permite o cadastro de eventos (Minicursos ou Palestras) no sistema.
+
+    Esta função inicia o processo de cadastro de eventos, solicitando as credenciais do administrador
+    com permissão para realizar o cadastro. Ela realiza os seguintes passos:
+
+    Passos:
+    1. Solicita o nome do administrador com permissão de cadastro.
+       - O administrador deve fornecer seu nome para acessar a função de cadastro de eventos.
+
+    2. Verifica se o nome do administrador está na lista de administradores do sistema.
+       - Verifica se o nome fornecido corresponde a um administrador registrado no sistema.
+
+    3. Solicita a senha do administrador com um limite de até 3 tentativas.
+       - O administrador deve inserir a senha correta para confirmar sua identidade.
+       - São permitidas até 3 tentativas de senha incorreta.
+
+    4. Se as credenciais estiverem corretas, exibe as opções de cadastro (Minicurso ou Palestra) e solicita o tipo de evento.
+       - O administrador pode escolher entre cadastrar um Minicurso (M) ou uma Palestra (P).
+
+    5. Solicita informações detalhadas do evento, incluindo nome, local, data, horário, carga horária e ministrante.
+       - O administrador fornece informações específicas sobre o evento a ser cadastrado.
+
+    6. Valida as informações inseridas, incluindo a validação de formato de data, horário e carga horária.
+       - As informações fornecidas pelo administrador são verificadas para garantir que sejam válidas.
+
+    7. Cria um dicionário com as informações do novo evento.
+       - As informações validadas são organizadas em um dicionário que representa o evento.
+
+    8. Adiciona o novo evento à lista de eventos correspondente (Minicursos ou Palestras) no sistema.
+       - O evento é adicionado à lista apropriada no sistema.
+
+    9. Imprime uma mensagem de sucesso informando que o evento foi adicionado ao sistema.
+       - Confirma que o evento foi cadastrado com êxito.
+
+    Note:
+        Para cadastrar um evento, o administrador deve ter permissões e fornecer credenciais corretas.
+        A validação de dados garante que informações válidas sejam inseridas no sistema.
 
     Returns:
-        float: A carga horária total dos eventos selecionados pelo participante.
+        None
+
+    Raises:
+        Exception: Se ocorrer um erro durante o cadastro do evento, uma exceção será lançada com informações detalhadas do erro.
+
+    Examples:
+        Exemplo de uso da função:
+        registerEvent()
+
     """
-    cargaHorariaTotal = 0  # Inicializa a carga horária total como zero.
 
-    # Loop pelos minicursos selecionados pelo participante.
-    for evento in participante.get('minicursoSelecionados', []):
-        cargaHorariaTotal += evento['cargaHoraria']  # Adiciona a carga horária do minicurso.
-
-    # Loop pelas palestras selecionadas pelo participante.
-    for evento in participante.get('palestrasSelecionadas', []):
-        cargaHorariaTotal += evento['cargaHoraria']  # Adiciona a carga horária da palestra.
-
-    return cargaHorariaTotal  # Retorna a carga horária total.
-
-def listarParticipantesComEventos():
+def listEvents():
 """
-Função que lista todos os participantes e os eventos em que estão inscritos.
+Esta função lista os eventos registrados no sistema, incluindo workshops e palestras, fornecendo informações detalhadas
+sobre cada evento.
 
-    Esta função percorre a lista de participantes e exibe informações sobre cada um,
-    incluindo nome, telefone, instituição e eventos inscritos (se houver).
+    Parâmetros:
+    Nenhum
 
-    Args:
+    Comportamento:
+    1. Desenha uma linha horizontal e imprime um título centralizado "LISTA DE EVENTOS" para identificar a seção de listagem de eventos.
+
+    2. Em seguida, lista os workshops registrados no sistema, imprimindo as seguintes informações para cada workshop:
+       - Índice do evento na lista.
+       - Nome do workshop.
+       - Data do workshop.
+       - Horário do workshop.
+       - Local do workshop.
+       - Carga horária do workshop em horas.
+       - Nome do apresentador do workshop.
+
+    3. A função continua listando as palestras registradas no sistema, imprimindo as seguintes informações para cada palestra:
+       - Índice da palestra na lista.
+       - Nome da palestra.
+       - Data da palestra.
+       - Horário da palestra.
+       - Local da palestra.
+       - Carga horária da palestra.
+       - Nome do palestrante.
+
+    4. Após listar todos os eventos, a função chama a função 'back' para permitir que o usuário retorne ao menu principal.
+
+    5. A função aguarda 3 segundos antes de encerrar a execução.
+
+    Uso:
+    A função 'listEvents' é usada para exibir uma lista organizada de todos os eventos registrados no sistema, incluindo
+    informações detalhadas sobre cada evento.
+
+    Exemplo:
+    listEvents()
+
+    Observações:
+    - A função assume que os eventos já foram registrados no sistema, pois ela apenas lista os eventos existentes.
+    - Os eventos são separados em duas categorias: workshops e palestras, e suas informações são formatadas de maneira clara
+      e legível.
+    """
+
+def listParticipants():
+"""
+Lista os participantes cadastrados no sistema.
+
+    Esta função exibe uma lista de todos os participantes cadastrados no sistema, incluindo o índice, nome e uma linha divisória para cada participante.
+
+    Parâmetros:
+    Nenhum.
+
+    Retorno:
+    Nenhum.
+
+    Exemplo:
+    listParticipants()
+
+    Saída:
+    ----------------------------------------
+    LISTA DE PARTICIPANTES
+    ----------------------------------------
+    Índice: 0 - Nome: João
+    ----------------------------------------
+    Índice: 1 - Nome: Maria
+    ----------------------------------------
+
+    Observações:
+    - Esta função exibe uma lista de participantes cadastrados no sistema.
+    - Cada participante é exibido com um índice numérico, seu nome e uma linha divisória para facilitar a leitura.
+    - Se não houver participantes cadastrados, a função não exibirá nada.
+    """
+
+def choiceEvent(participant):
+"""
+Permite que um participante escolha workshops e palestras para participar.
+
+    Parâmetros:
+    participant (dict): Um dicionário que representa o participante.
+
+    Comportamento:
+    1. Exibe um título centralizado "SELECIONAR EVENTOS" para identificar a seção de seleção de eventos.
+    2. Define limites máximos de workshops e palestras que o participante pode selecionar (maxWorkshops e maxLectures).
+    3. Obtém as seleções anteriores de workshops e palestras do dicionário 'participant'.
+    4. Inicia um loop onde o participante pode selecionar workshops e palestras até atingir os limites máximos.
+    5. Solicita ao participante que escolha entre minicursos (M) ou palestras (P).
+    6. Lista os eventos disponíveis do tipo escolhido com informações detalhadas.
+    7. Solicita que o participante insira o número do evento que deseja selecionar.
+    8. Registra a seleção no dicionário 'participant' e fornece mensagens informativas.
+    9. Lida com erros como entrada inválida, índice fora dos limites e eventos já selecionados.
+    10. Pergunta se o participante deseja selecionar mais eventos e encerra o loop se necessário.
+
+    Uso:
+    A função 'choiceEvent' é chamada para permitir que um participante selecione workshops e palestras para participar.
+
+    Exemplo:
+    choiceEvent(participant)
+
+    Observações:
+    - Certifique-se de que o participante foi previamente registrado no sistema e tenha um dicionário associado a ele.
+    - Os limites máximos de workshops e palestras podem ser ajustados conforme necessário.
+    - A função exibe mensagens informativas e trata erros para tornar a seleção de eventos mais intuitiva e robusta.
+    """
+
+def chooseEvent():
+"""
+Função que permite que um participante selecione workshops e palestras para participar.
+
+    Esta função exibe a lista de participantes cadastrados, solicita o nome do participante desejado,
+    procura o participante na lista de participantes e, se encontrado, permite que o participante selecione
+    eventos usando a função 'choiceEvent'. Após a seleção dos eventos, a função retorna ao menu principal.
+
+    Parâmetros:
         Nenhum.
 
-    Returns:
-        Nenhum. A função apenas imprime informações na tela.
+    Comportamento:
+    1. Exibe a lista de participantes cadastrados usando a função 'listParticipants'.
 
+    2. Solicita ao usuário o nome do participante desejado e formata o nome para capitalizar a primeira letra
+       e remover espaços em excesso.
+
+    3. Inicializa a variável 'participant' como 'None' para armazenar as informações do participante após a busca.
+
+    4. Entra em um loop que percorre a lista de participantes procurando pelo participante com o nome inserido.
+
+    5. Se o participante for encontrado, a variável 'participant' é atualizada com as informações desse participante.
+
+    6. Se o participante não for encontrado, exibe uma mensagem informando que o participante não foi encontrado
+       e encerra a função.
+
+    7. Após encontrar o participante, a função chama 'choiceEvent(participant)' para permitir que o participante selecione eventos.
+
+    8. Após a seleção dos eventos, a função chama 'back()' para voltar à função anterior (menu principal).
+
+    9. Aguarda por 3 segundos antes de encerrar a execução.
+
+    Uso:
+    A função 'chooseEvent' é chamada quando um participante deseja selecionar workshops e palestras para participar.
+
+    Exemplo:
+    chooseEvent()
+
+    Observações:
+    - Esta função atua como um intermediário para permitir que um participante específico selecione seus eventos
+      usando a função 'choiceEvent'. Ela fornece uma maneira conveniente de navegar entre as funcionalidades do sistema de eventos.
     """
-    # Linha para separar a saída.
-    linha()
-    # Título centralizado para a seção.
-    tituloCentralizado('LISTA DE PARTICIPANTES COM EVENTOS')
-    # Linha para separar a saída.
-    linha()
 
-    # Loop através de todos os participantes.
-    for participante in users['user']:
-        nome = participante['name']
-        telefone = participante['telefone']
-        instituicao = participante['instituição']
+def generateCertificate():
+"""
+Função que permite gerar um certificado para um participante, exibindo as informações dos eventos
+inscritos pelo participante e a carga horária total.
 
-        # Imprime informações básicas do participante.
-        print(f'Nome: {nome}')
-        print(f'Telefone: {telefone}')
-        print(f'Instituição: {instituicao}')
+    A função começa exibindo um título "GERAR CERTIFICADO" e a lista de participantes cadastrados.
+    O usuário é solicitado a selecionar um número de participante. Em seguida, a função exibe as informações
+    dos eventos (workshops e palestras) inscritos pelo participante selecionado, incluindo nome, data, horário,
+    local, carga horária e ministrante para cada evento.
 
-        eventosInscritos = []
+    Além disso, a função calcula a carga horária total de todos os eventos inscritos e a exibe. Também exibe a data
+    de emissão do certificado.
 
-        # Verifica se o participante está inscrito em minicursos e palestras.
-        if 'minicursoSelecionados' in participante:
-            eventosInscritos.extend(participante['minicursoSelecionados'])
+    Parâmetros:
+        Nenhum.
 
-        if 'palestrasSelecionadas' in participante:
-            eventosInscritos.extend(participante['palestrasSelecionadas'])
+    Comportamento:
+    1. Exibe um título centralizado "GERAR CERTIFICADO" e a lista de participantes cadastrados usando 'listParticipants'.
 
-        # Se o participante estiver inscrito em eventos, exibe os detalhes.
-        if eventosInscritos:
-            print('Eventos Inscritos:')
-            linhaSimples()
-            for evento in eventosInscritos:
-                # Título centralizado para indicar o tipo de evento (Minicurso ou Palestra).
-                tituloCentralizado(evento['tipo'])
-                print(f'Nome: {evento["nome"]}')
-                print(f'Data: {evento["data"]}')
-                print(f'Horário: {evento["horario"]}')
-                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-                print(f'Ministrante: {evento["ministrante"]}')
-                linha()
-        else:
-            # Se o participante não estiver inscrito em nenhum evento.
-            print('O participante não está inscrito em nenhum evento.')
+    2. Entra em um loop que permite ao usuário selecionar um número de participante. O loop trata exceções de entrada
+       inválida.
 
-        # Linha para separar a saída entre os participantes.
-        linha()
+    3. Após a seleção do participante, a função exibe um título com o nome do participante selecionado e, em seguida,
+       exibe as informações dos eventos (workshops e palestras) inscritos por esse participante, incluindo nome, data,
+       horário, local, carga horária e ministrante para cada evento.
+
+    4. Calcula a carga horária total somando a carga horária de todos os eventos inscritos.
+
+    5. Exibe a carga horária total, a data de emissão do certificado e chama a função 'back' para retornar ao menu principal.
+
+    6. Aguarda por 3 segundos antes de encerrar a execução.
+
+    Uso:
+    A função 'generateCertificate' é usada quando um administrador deseja gerar um certificado para um participante específico.
+
+    Exemplo:
+    generateCertificate()
+
+    Observações:
+    - O participante selecionado deve estar cadastrado no sistema e ter eventos inscritos para que um certificado seja gerado.
+    """

@@ -1,157 +1,184 @@
 import datetime
 import os
 import sys
+from time import sleep
+import keyboard
 
-eventos = {
-    'minicursos': [
+
+events = {
+    'workshops': [
         {
-            'tipo': 'Minicurso',
-            'nome': 'Introdução à Programação Python',
-            'data': '12/10/2023',
+            'typeEvent': 'Minicurso',
+            'name': 'Introdução à Programação Python',
+            'date': '12/10/2023',
+            'hours': '09:00 - 12:00',
             'local': 'Sala 101',
-            'horario': '09:00 - 12:00',
-            'cargaHoraria': 3,
-            'ministrante': 'Prof. Ana Silva'
+            'workLoad': 3,
+            'minister': 'Prof. Ana Silva'
         },
         {
-            'tipo': 'Minicurso',
-            'nome': 'Machine Learning Básico',
-            'data': '13/10/2023',
+            'typeEvent': 'Minicurso',
+            'name': 'Machine Learning Avançado',
+            'date': '13/10/2023',
+            'hours': '14:00 - 17:00',
             'local': 'Sala 102',
-            'horario': '14:00 - 17:00',
-            'cargaHoraria': 3,
-            'ministrante': 'Dr. Pedro Lima'
+            'workLoad': 3,
+            'minister': 'Dr. Pedro Lima'
         },
         {
-            'tipo': 'Minicurso',
-            'nome': 'Desenvolvimento Web com Django',
-            'data': '15/10/2023',
+            'typeEvent': 'Minicurso',
+            'name': 'Desenvolvimento Mobile com Flutter',
+            'date': '15/10/2023',
+            'hours': '09:30 - 12:30',
             'local': 'Sala 103',
-            'horario': '09:30 - 12:30',
-            'cargaHoraria': 3,
-            'ministrante': 'Prof. Maria Santos'
+            'workLoad': 3,
+            'minister': 'Prof. Maria Santos'
         },
         {
-            'tipo': 'Minicurso',
-            'nome': 'Introdução à Ciência de Dados',
-            'data': '15/10/2023',
+            'typeEvent': 'Minicurso',
+            'name': 'Análise de Dados com Pandas',
+            'date': '15/10/2023',
+            'hours': '14:30 - 17:30',
             'local': 'Sala 104',
-            'horario': '14:30 - 17:30',
-            'cargaHoraria': 3,
-            'ministrante': 'Dr. Carlos Rodrigues'
+            'workLoad': 3,
+            'minister': 'Dr. Carlos Rodrigues'
+        },
+        {
+            'typeEvent': 'Minicurso',
+            'name': 'Introdução à Inteligência Artificial',
+            'date': '16/10/2023',
+            'hours': '10:00 - 13:00',
+            'local': 'Sala 105',
+            'workLoad': 3,
+            'minister': 'Dra. Sofia Alves'
         }
+
     ],
-    'palestras': [
+    'lectures': [
         {
-            'tipo': 'Palestra',
-            'nome': 'Ética na Tecnologia',
-            'data': '14/10/2023',
+            'typeEvent': 'Palestra',
+            'name': 'Ética na Tecnologia',
+            'date': '14/10/2023',
+            'hours': '10:30 - 12:00',
             'local': 'Auditório Principal',
-            'horario': '10:30 - 12:00',
-            'cargaHoraria': 1.5,
-            'ministrante': 'Dra. Sofia Alves'
+            'workLoad': 1.5,
+            'minister': 'Dra. Sofia Alves'
         },
         {
-            'tipo': 'Palestra',
-            'nome': 'O Futuro da Robótica',
-            'data': '14/10/2023',
+            'typeEvent': 'Palestra',
+            'name': 'O Impacto das Redes Sociais',
+            'date': '14/10/2023',
+            'hours': '14:00 - 15:30',
             'local': 'Auditório Principal',
-            'horario': '15:00 - 16:30',
-            'cargaHoraria': 1.5,
-            'ministrante': 'Dr. André Oliveira'
+            'workLoad': 1.5,
+            'minister': 'Dr. Carlos Santos'
         },
         {
-            'tipo': 'Palestra',
-            'nome': 'Inteligência Artificial Aplicada em Saúde',
-            'data': '16/10/2023',
+            'typeEvent': 'Palestra',
+            'name': 'Inovação em Inteligência Artificial',
+            'date': '15/10/2023',
+            'hours': '11:00 - 12:30',
             'local': 'Auditório 2',
-            'horario': '11:00 - 12:30',
-            'cargaHoraria': 1.5,
-            'ministrante': 'Dra. Laura Fernandes'
+            'workLoad': 1.5,
+            'minister': 'Dra. Laura Fernandes'
         },
         {
-            'tipo': 'Palestra',
-            'nome': 'Tendências em Tecnologia da Informação',
-            'data': '17/10/2023',
+            'typeEvent': 'Palestra',
+            'name': 'Segurança Cibernética',
+            'date': '16/10/2023',
+            'hours': '15:30 - 17:00',
             'local': 'Auditório 1',
-            'horario': '10:00 - 11:30',
-            'cargaHoraria': 1.5,
-            'ministrante': 'Dr. Rafael Silva'
+            'workLoad': 1.5,
+            'minister': 'Dr. Pedro Lima'
         },
         {
-            'tipo': 'Palestra',
-            'nome': 'Python',
-            'data': '29/10/2023',
-            'local': 'Auditório 1',
-            'horario': '10:00 - 11:30',
-            'cargaHoraria': 1.5,
-            'ministrante': 'Dr. Rafael Silva'
+            'typeEvent': 'Palestra',
+            'name': 'Inovações Tecnológicas',
+            'date': '16/10/2023',
+            'hours': '09:00 - 10:30',
+            'local': 'Auditório 3',
+            'workLoad': 1.5,
+            'minister': 'Dr. Ana Silva'
         }
     ]
 }
 
 users = {
-    'admins': [{'name': 'Jorge', 'pass': '123456', 'telefone': 998360879, 'instituição': 'UFERSA'}],
-    'user': [{'name': 'João',
-              'telefone': '999999999',
-              'instituição': 'UFERSA',
-              'minicursoSelecionados': [],
-              'palestrasSelecionadas': []}]
+    'administrators': [{'name': 'Jorge', 'password': '123456', 'number': 998360879, 'institution': 'UFERSA'}],
+    'participants': [{'name': 'João',
+                      'number': '999999999',
+                      'institution': 'UFERSA',
+                      'workshopsSelected': [],
+                      'lecturesSelected': []}]
 }
 
 
-def linha():
+def line():
     # Imprime uma linha horizontal formada por 30 caracteres "="
-    print('=' * 30)
+    print('=' * 40)
 
 
-def linhaSimples():
+def simpleLine():
     # Imprime uma linha horizontal formada por 30 caracteres "-"
-    print('-' * 30)
+    print('-' * 60)
 
 
-def tituloCentralizado(titulo):
+def titleCentered(title):
     # Imprime o "titulo" centralizado em uma linha de 30 caracteres
-    print(f'"{titulo:^30}"')
+    print(f'{title:^40}')
 
 
-def validarSenha(password):
+def clearTerminal():
+    # A função os.system() permite executar comandos no sistema operacional.
+    # Dependendo do sistema operacional, ele executará 'cls' (Windows) ou 'clear' (Linux/Unix) para limpar a tela do terminal.
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def back():
+    print("Pressione 'Q' para sair")
+    simpleLine()
+    while True:
+        if keyboard.is_pressed('q'):
+            print('Saindo...')
+            break
+
+
+def validatePassword(password):
     cont = 0  # Inicializa um contador de tentativas com valor 0
 
     # Enquanto a senha não estiver na lista de senhas dos administradores
-    while password not in [admin['pass'] for admin in users['admins']]:
-        linhaSimples()  # Função linhaSimples() cria uma linha horizontal simples para separar mensagens
+    while password not in [admin['password'] for admin in users['administrators']]:
+        simpleLine()
         print('ERRO! Senha incorreta!')
         cont += 1  # Incrementa o contador de tentativas
 
         # Exibe o número de tentativas restantes (até 3)
         print(f'Mais {3 - cont} tentativas.')
-        linhaSimples()
+        simpleLine()
 
         # Solicita novamente a senha ao usuário
-        password = str(input('Informe a senha: ')).strip()
+        password = str(input('Informe a senha:')).strip()
 
         # Se o número de tentativas chegar a 3, encerra o programa
-        if cont == 3:
+        if cont == 2:
             print('Tentativas esgotadas! Programa encerrado!')
             sys.exit()  # Encerra o programa
 
 
-def validarData(data):  # Função para validar uma data no formato "dia/mês/ano"
+def validateDate(date):
     try:
-        # Tenta criar um objeto datetime a partir da string de data usando o formato "%d/%m/%Y"
-        datetime.datetime.strptime(data, '%d/%m/%Y')
-        # Se a conversão for bem-sucedida, a data é válida, retorna True
+        # Tenta criar um objeto datetime a partir da string de data usando i formato "%d/%m%Y"
+        datetime.datetime.strptime(date, '%d/%m/%Y')
         return True
     except ValueError:
-        # Se ocorrer uma exceção ValueError, a data é inválida, retorna False
+        # Se ocorrer uma exceção ValueErro, a data é inválida, retorna False
         return False
 
 
-def validarHorario(horario):  # Função para validar um horário no formato "hora:minuto"
+def validateHours(hours):
     try:
         # Tenta criar um objeto datetime a partir da string de horário usando o formato "%H:%M"
-        datetime.datetime.strptime(horario, '%H:%M')
+        datetime.datetime.strptime(hours, '%H:%M')
         # Se a conversão for bem-sucedida, o horário é válido, retorna True
         return True
     except ValueError:
@@ -159,543 +186,492 @@ def validarHorario(horario):  # Função para validar um horário no formato "ho
         return False
 
 
-def cadastrarEvento():
-    # Imprime uma linha para separar visualmente a seção de cadastro de eventos
-    linha()
-    # Função tituloCentralizado() deve imprimir um título centralizado para a seção de cadastro de eventos
-    tituloCentralizado('CADASTRO DE EVENTOS')
-    linha()
+def registerParticipant():
+    try:
+        line()
+        titleCentered('CADASTRO DE PARTICIPANTE')
+        line()
 
-    # Solicita o nome do administrador com permissão de cadastro
-    nomeAdmin = str(input(
-        'Informe o nome do administrador com permissão de cadastro: ')).strip().capitalize()
+        # Solicita ao usuário que informe o nome
+        name = str(input('Informe seu nome: ')).strip().capitalize()
 
-    # Verifica se o nome do administrador está na lista de administradores
-    if nomeAdmin in [admin['name'] for admin in users['admins']]:
-        # Solicita a senha do administrador (com até 3 tentativas)
-        senha = str(input('Informe a senha (3 tentativas): '))
-        validarSenha(senha)
+        # Validação do nome: verifica se o nome não está em branco
+        while not name:
+            name = str(input('Nome inválido. Informe seu nome: ')
+                       ).strip().capitalize()
 
-        # Acesso concedido, o administrador pode cadastrar eventos
+        # Solicita ao usuário que informe o telefone celular
+        number = str(input('Informe seu telefone (9 dígitos apenas): '))
 
-        # Exibe opções de cadastro (Minicurso ou Palestra)
-        linha()
-        print('Opções de cadastro:')
+        # Validação do telefone: verifica se é um número de 9 dígitos
+        while not number.isdigit() or len(number) != 9:
+            number = str(input(
+                'Número de telefone inválido. Certifique-se de inserir 9 dígitos númericos: '))
+
+        # Solicita ao usuário que informe a instituição vinculada
+        institution = str(input('Instituição vinculada: ')
+                          ).strip().capitalize()
+
+        # Validação da instituição: verifica se o nome não está em branco
+        while not institution:
+            institution = str(
+                input('Nome inválido. Informe o nome da instituição: ')).strip().capitalize()
+
+        newParticipant = {
+            'name': name,
+            'number': number,
+            'institution': institution,
+            'minicoursesSelected': [],  # Lista de minicursos selecionados vazia
+            'lecturesSelected': []  # Lista de palestras selecionadas vazia
+        }
+
+        # Adicionar o novo participante á lista de participantes (users['participant'])
+        users['participants'].append(newParticipant)
+
+        line()
+        print(f'Usuário {name} adicionado com sucesso!')
+        line()
+
+        # Agora, vamos aguardar até que o usuário pressione 'Q' para sair
+        back()
+
+        sleep(2)
+    except Exception as e:
+        # Lidar com exceções em gerais e fornecer informçaões sobre o erro
+        print(f'Ocorreu um erro durante o cadastro: {str(e)}')
+
+
+def registerEvent():
+    try:
+        line()
+        titleCentered('CADASTRO DE EVENTOS')
+        line()
+
+        # Verifica o nome do administrador com permissão de cadastrar algum evento
+        nameAdmin = str(input(
+            'Informe o nome do administrador com permissão de cadastro: ')).strip().capitalize()
+
+        # Verifica se o nome do administrador está na lista de administradores
+        if nameAdmin in [admin['name'] for admin in users['administrators']]:
+            print(F'Usuário:{nameAdmin}.')
+            # Solicita a senha do administrador (Com até 3 tentativas)
+            password = str(input('Informe a senha (3 tentativas): '))
+            validatePassword(password)
+
+            simpleLine()
+            titleCentered('ACESSO LIBERADO')
+            simpleLine()
+
+            # Exibe opções de cadastro (Minicurso ou palestras)
+            print('Opções de cadastro:')
+            print('M - Minicurso')
+            print('P - Palestra')
+
+            # Solicita o tipo de evento desejado (M ou P)
+            t = str(input(
+                'O que você deseja cadastrar? [M - Minicurso | P - Palestra]: ')).strip().upper()[0]
+
+            # Define o tipo de evento com base na escolha do administrador
+            if t == 'M':
+                typeEvent = 'Minicurso'
+            elif t == 'P':
+                typeEvent = 'Palestra'
+            else:
+                print('Tipo de evento inválido.')
+                return
+
+            # Solicita informações do evento(nome, local, data, horário, carga horária, ministrante)
+            line()
+            titleCentered(f'CADASTRO DE {typeEvent.upper()}')
+            line()
+
+            # Solicita o nome do evento
+            name = str(input('Nome do evento: ')).strip().capitalize()
+
+            # Validação do nome do evento: não pode estar em branco
+            while not name:
+                name = str(input('Nome vazio. Nome do evento:'))
+            # Solicita o local do evento onde será realizado
+
+            local = str(input('Informe o local:')).strip().capitalize()
+
+            while not local:
+                local = str(input('Local vazio. Local do evento: '))
+
+            # Solicita a data do evento
+            date = str(input('Informe a data (XX/XX/XXXX): '))
+
+            # Validação da data usando a função validarData(data)
+            while validateDate(date) == False:
+                date = str(
+                    input('Use o formato correto. Informe a data (XX/XX/XXXX): '))
+                if validateDate(date):
+                    break
+
+            # Solicita horario do evento
+            hours = str(input('Informe o horário (XX-XX): '))
+
+            # Validação do horário usando a função validarHorario(horario)
+            while validateHours(hours) == False:
+                hours = str(
+                    input('Use o formato correto. Informe o horário (XX:XX): '))
+                if validateHours(hours):
+                    break
+
+            # Solicita a carga horária do evento (em horas)
+            while True:
+                # Solicita a carga horária em horas
+                workLoad = str(input('Carga horária (em horas): '))
+                # Validação da carga horária: valor positivo
+                if workLoad.isdigit() and int(workLoad) > 0:
+                    workLoad = int(workLoad)
+                    break
+                else:
+                    print('Valor de carga horária inválida. Informe um valor positivo.')
+
+            # Solicita o nome do ministrante para o evento
+            minister = str(input('Informe o ministrante: ')
+                           ).strip().capitalize()
+
+            # Validação do nome do ministrante: não pode estar em branco
+            while not minister:
+                minister = str(
+                    input('Ministrante vazio. Informe o ministrante: '))
+
+            # Cria um dicionário com as informações do novo evento
+            newEvent = {
+                'typeEvent': typeEvent,
+                'name': name,
+                'date': date,
+                'local': local,
+                'hours': hours,
+                'workLoad': workLoad,
+                'minister': minister
+            }
+
+            # Adiciona um novo evento á lista de eventos correspodente (Minicursos ou paletra)
+            if t == 'M':
+                events['workshops'].append(newEvent)
+            elif t == 'P':
+                events['lectures'].append(newEvent)
+            else:
+                print('TIPO DE EVENTO INVÁLIDO!')
+
+            # Imprime uma mensagem de sucesso informando que o evento foi adicionado
+            simpleLine()
+            print(f'{typeEvent} {name} adicionado com sucesso ao sistema!')
+            simpleLine()
+        else:
+            # Caso o nome do admnistrador não seja encontrado ou a senha esteja incorreta
+            print(
+                'PERMISSÃO NEGADA! Nome de administrador não encontrado ou senha incorreta!')
+
+        back()
+        sleep(2)
+    except Exception as e:
+        # Lidar com exceções em geral e fornecer informações sobre o erro
+        print(f'Ocorreu um erro durante o cadastro do evento: {str(e)}')
+
+
+def listEvents():
+    line()
+    titleCentered('LISTA DE EVENTOS')
+    line()
+
+    # Lista os minicursos cadastrados no sistema
+    print('MINICURSOS:')
+    simpleLine()
+    for index, event in enumerate(events['workshops']):
+        # Imprime informações de cada minicurso
+        print(f'Índice: {index}.')
+        print(f'Nome: {event["name"]}.')
+        print(f'Data: {event["date"]}.')
+        print(f'Horário: {event["hours"]}.')
+        print(f'Local: {event["local"]}.')
+        print(f'Carga horária: {event["workLoad"]} horas.')
+        print(f'Ministrante: {event["minister"]}')
+        simpleLine()
+
+    # Lista as palestras cadastradas no sistemas
+    print('PALESTRAS:')
+    simpleLine()
+    for index, event in enumerate(events['lectures']):
+        # Imprime informações de cada palestra
+        print(f'Índice: {index}')
+        print(f'Nome: {event["name"]}.')
+        print(f'Data: {event["date"]}.')
+        print(f'Horário: {event["hours"]}.')
+        print(f'Local: {event["local"]}.')
+        print(f'Carga horária: {event["workLoad"]}.')
+        print(f'Ministrante: {event["minister"]}.')
+        simpleLine()
+    back()
+    sleep(3)
+
+
+def listParticipants():
+    line()
+    titleCentered('LISTA DE PARTICIPANTES')
+    line()
+
+    # Loop para percorrer a lista de participantes e exibi-los
+    for index, user in enumerate(users['participants']):
+        # Exibe o índice e o nome do participante
+        print(f'Índice: {index + 1} - Nome: {user["name"]} ')
+        simpleLine()  # Função para imprimir uma linha divisória
+
+
+def choiceEvent(participant):
+    # Exibe uma linha horizontal e um título centralizado para identificar a seção de seleção de eventos.
+    line()
+    titleCentered('SELECIONAR EVENTOS')
+    line()
+
+    # Define limites máximos de workshops e palestras que o participante pode selecionar.
+    maxWorkshops = 3
+    maxLectures = 4
+
+    # Obtém as seleções anteriores de workshops e palestras do dicionário 'participant'.
+    workshopsSelected = participant.get('workshopsSelected', [])
+    lecturesSelected = participant.get('lecturesSelected', [])
+
+    # Inicia um loop onde o participante pode selecionar workshops e palestras até atingir os limites máximos.
+    while True:
+        # Verifica se o participante atingiu o limite máximo de workshops e palestras.
+        if len(workshopsSelected) >= maxWorkshops and len(lecturesSelected) >= maxLectures:
+            # Exibe uma mensagem indicando que o limite máximo foi atingido e encerra o loop.
+            print('Você atingiu o limite máximo de workshops e palestras.')
+            simpleLine()
+            break
+
+        # Exibe opções disponíveis para o participante (minicurso ou palestra).
+        print('Opções disponíveis:')
         print('M - Minicurso')
         print('P - Palestra')
 
-        # Solicita o tipo de evento desejado (M ou P)
-        tipo = str(input(
-            'O que você deseja cadastrar? [M - minicurso | P - Palestra]: ')).strip().upper()[0]
+        # Solicita ao participante que escolha entre minicursos (M) ou palestras (P).
+        event_type = input('Informe o tipo do evento (M/P): ').strip().upper()
 
-        # Define o tipo de evento com base na escolha do administrador
-        if tipo == 'M':
-            tipoEvento = 'Minicurso'
-        elif tipo == 'P':
-            tipoEvento = 'Palestra'
+        # Verifica se o participante escolheu minicurso (M).
+        if event_type == 'M':
+            # Obtém a lista de workshops disponíveis e a seleção atual do participante.
+            eventsAvailable = events['workshops']
+            selection = workshopsSelected
+            maxSelection = maxWorkshops
+        # Verifica se o participante escolheu palestra (P).
+        elif event_type == 'P':
+            # Obtém a lista de palestras disponíveis e a seleção atual do participante.
+            eventsAvailable = events['lectures']
+            selection = lecturesSelected
+            maxSelection = maxLectures
         else:
-            print('Tipo de evento inválido.')
-            return
-
-        # Solicita informações do evento (nome, local, data, horário, carga horária, ministrante)
-        linha()
-        print(f'{f"Cadastro de {tipoEvento}":^30}')
-        linha()
-        nome = str(input('Nome do evento: '))
-
-        # Validação do nome do evento: não pode estar em branco
-        while not nome:
-            nome = str(input('Nome vazio. Nome do evento: '))
-
-        local = str(input('Informe o local: '))
-
-        # Validação do local do evento: não pode estar em branco
-        while not local:
-            local = str(input('Local vazio. Local do evento: '))
-
-        data = str(input('Informe a data (XX/XX/XXXX): '))
-
-        # Validação da data usando a função validarData(data)
-        while validarData(data) == False:
-            data = str(
-                input('Use o formato correto. Informe a data (XX/XX/XXXX): '))
-            if validarData(data):
-                break
-
-        horario = str(input('Informe o horário (XX:XX): '))
-
-        # Validação do horário usando a função validarHorario(horario)
-        while validarHorario(horario) == False:
-            horario = str(
-                input('Use o formato correto. Informe o horário (XX:XX): '))
-            if validarHorario(horario):
-                break
-
-        # Solicita a carga horária do evento (em horas)
-        while True:
-            cargaHoraria = str(input('Carga horária (em horas): ')).strip()
-            # Validação da carga horária: deve ser um valor positivo
-            if cargaHoraria.isdigit() and int(cargaHoraria) > 0:
-                cargaHoraria = int(cargaHoraria)
-                break
-            else:
-                print('Valor de carga horária inválido. Informe um valor positivo.')
-
-        ministrante = str(input('Informe o ministrante: '))
-
-        # Validação do nome do ministrante: não pode estar em branco
-        while not ministrante:
-            ministrante = str(
-                input('Ministrante vazio. Informe o ministrante: '))
-
-        # Cria um dicionário com as informações do novo evento
-        novoEvento = {
-            'tipo': tipo,
-            'nome': nome,
-            'data': data,
-            'local': local,
-            'horario': horario,
-            'cargaHoraria': cargaHoraria,
-            'ministrante': ministrante
-        }
-
-        # Adiciona o novo evento à lista de eventos correspondente (minicurso ou palestra)
-        if tipo == 'M':
-            eventos['minicursos'].append(novoEvento)
-        elif tipo == 'P':
-            eventos['palestras'].append(novoEvento)
-        else:
-            print('TIPO INVÁLIDO!')
-
-        # Imprime uma mensagem de sucesso informando que o evento foi adicionado
-        print(f'{nome} adicionado com sucesso!')
-    else:
-        # Caso o nome do administrador não seja encontrado ou a senha esteja incorreta
-        print('PERMISSÃO NEGADA! Nome de administrador não encontrado ou senha incorreta.')
-
-
-def listarEventos():
-    # Imprime uma linha para separar visualmente a seção de listagem de eventos
-    linha()
-    # Função tituloCentralizado() deve imprimir um título centralizado para a seção de listagem de eventos
-    tituloCentralizado('LISTA DE EVENTOS')
-    linha()
-
-    # Lista os minicursos
-    print('Minicursos:')
-    for indice, evento in enumerate(eventos['minicursos']):
-        # Imprime informações de cada minicurso
-        print(f'Índice: {indice}')
-        print(f'Nome: {evento["nome"]}')
-        print(f'Data: {evento["data"]}')
-        print(f'Local: {evento["local"]}')
-        print(f'Horário: {evento["horario"]}')
-        print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-        print(f'Ministrante: {evento["ministrante"]}')
-        # Função linha() deve imprimir uma linha para separar visualmente os eventos
-        linha()
-
-    # Lista as palestras
-    print('Palestras:')
-    for indice, evento in enumerate(eventos['palestras']):
-        # Imprime informações de cada palestra
-        print(f'Índice: {indice}')
-        print(f'Nome: {evento["nome"]}')
-        print(f'Data: {evento["data"]}')
-        print(f'Local: {evento["local"]}')
-        print(f'Horário: {evento["horario"]}')
-        print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-        print(f'Ministrante: {evento["ministrante"]}')
-        # Função linha() deve imprimir uma linha para separar visualmente os eventos
-        linha()
-
-
-def listarParticipantes():
-    # Imprime um título centralizado para a seção de listagem de participantes
-    print(f"{'Todos os Participantes:':^30}")
-    # Chama a função linha() para imprimir uma linha para separar visualmente a lista
-    linha()
-
-    # Itera sobre a lista de participantes no dicionário 'users'
-    for participante in users['user']:
-        # Obtém informações do participante, como nome, telefone e instituição
-        nome = participante['name']
-        telefone = participante['telefone']
-        instituicao = participante['instituição']
-
-        # Imprime as informações do participante formatadas
-        print(f'Nome: {nome} - Instituição: {instituicao}')
-
-
-def cadastrarParticipante():
-    # Imprime uma linha para separar visualmente a seção de cadastro de usuário
-    linha()
-    # Função tituloCentralizado() deve imprimir um título centralizado para a seção de cadastro de usuário
-    tituloCentralizado('CADASTRO DE USUÁRIO')
-    linha()
-
-    # Solicita ao usuário que informe o nome
-    name = str(input('Informe seu nome:')).strip().capitalize()
-
-    # Validação do nome: verifica se o nome não está em branco
-    while not name:
-        name = input('Nome inválido. Informe seu nome: ').strip().capitalize()
-
-    # Solicita ao usuário que informe o telefone
-    telefone = str(input('Informe seu telefone (9 dígitos apenas):'))
-
-    # Validação do telefone: verifica se é um número de 9 dígitos
-    while not telefone.isdigit() or len(telefone) != 9:
-        telefone = str(input(
-            'Número de telefone inválido. Certifique-se de inserir 9 dígitos numéricos:'))
-
-    # Solicita ao usuário que informe a instituição vinculada
-    instituição = str(input('Instituição vinculada:')).strip().capitalize()
-
-    # Validação da instituição: verifica se o nome não está em branco
-    while not instituição:
-        instituição = input(
-            'Nome inválido. Informe o nome da instituição: ').strip().capitalize()
-
-    # Cria um dicionário com as informações do novo participante
-    novoParticipante = {
-        'name': name,
-        'telefone': telefone,
-        'instituição': instituição,
-        'minicursoSelecionados': [],   # Lista de minicursos selecionados vazia
-        'palestrasSelecionadas': []    # Lista de palestras selecionadas vazia
-    }
-
-    # Adiciona o novo participante à lista de participantes (users['user'])
-    users['user'].append(novoParticipante)
-
-    # Imprime uma linha para separar visualmente a mensagem de sucesso
-    linha()
-    # Imprime uma mensagem de sucesso informando que o usuário foi adicionado
-    print(f'Usuário {name} adicionado com sucesso!')
-    # Imprime uma linha para separar visualmente a mensagem de sucesso
-    linha()
-
-
-def escolherEvento():
-    # Imprime uma linha para separar visualmente a seção de seleção de participante
-    linha()
-    # Imprime um título centralizado para a seção de seleção de participante
-    tituloCentralizado('SELECIONAR PARTICIPANTE')
-    linha()
-
-    # Lista todos os participantes disponíveis
-    listarParticipantes()
-
-    # Solicita ao usuário que informe o nome do participante
-    nomeParticipante = str(
-        input('Informe o nome do participante: ')).strip().capitalize()
-
-    # Inicializa a variável "participante" como None
-    participante = None
-
-    # Procura o participante com o nome informado na lista de participantes
-    for user in users['user']:
-        if user['name'] == nomeParticipante:
-            participante = user
-            break
-
-    # Se o participante não for encontrado, exibe uma mensagem e sai da função
-    if participante is None:
-        print('Participante não encontrado!')
-        return
-
-    # Imprime uma linha para separar visualmente a seção de seleção de eventos
-    linha()
-    # Imprime um título centralizado para a seção de seleção de eventos
-    tituloCentralizado('SELECIONAR EVENTOS')
-    linha()
-
-    # Lista todos os eventos disponíveis
-    listarEventos()
-
-    # Obtém as seleções atuais de minicursos e palestras do participante
-    selecaoMinicursos = participante.get('minicursoSelecionados', [])
-    selecaoPalestras = participante.get('palestrasSelecionadas', [])
-
-    # Define o número máximo de minicursos e palestras que o participante pode selecionar
-    maxMinicursos = 3
-    maxPalestras = 4
-
-    # Entra em um loop que permite ao participante selecionar eventos até atingir o limite máximo
-    while True:
-        # Verifica se o participante atingiu o limite máximo de minicursos e palestras
-        if len(selecaoMinicursos) >= maxMinicursos and len(selecaoPalestras) >= maxPalestras:
-            print('Você atingiu o limite máximo de minicursos e palestras.')
-            break
-
-        # Solicita ao usuário que digite o tipo de evento (M para Minicurso ou P para Palestra)
-        tipoEvento = input(
-            'Digite o tipo do evento (M - Minicurso ou P - Palestra): ').strip().upper()
-
-        # Verifica se o tipo de evento é válido (M ou P)
-        if tipoEvento == 'M':
-            eventosDisponiveis = eventos['minicursos']
-            selecao = selecaoMinicursos
-            maxSelecao = maxMinicursos
-        elif tipoEvento == 'P':
-            eventosDisponiveis = eventos['palestras']
-            selecao = selecaoPalestras
-            maxSelecao = maxPalestras
-        else:
+            # Exibe uma mensagem de erro se o tipo de evento escolhido for inválido e continua o loop.
             print(
-                'Tipo de evento inválido. Digite "M" para Minicurso ou "P" para Palestra.')
+                'Tipo de evento inválido. Digite "M" para minicurso ou "P" para palestra.')
+            simpleLine()
             continue
 
-        # Verifica se o participante já selecionou o número máximo de eventos do tipo escolhido
-        if len(selecao) >= maxSelecao:
+        # Verifica se o participante já selecionou o número máximo de eventos desse tipo.
+        if len(selection) >= maxSelection:
+            # Exibe uma mensagem indicando que o limite máximo foi atingido e continua o loop.
             print(
-                f'Você já selecionou o máximo de {maxSelecao} eventos desse tipo.')
-            continuar = input(
-                'Deseja selecionar outro evento? (S/N): ').strip().upper()
-            if continuar != 'S':
-                break
+                f'Você já selecionou o máximo de {maxSelection} eventos desse tipo.')
+            simpleLine()
+            continue
+
+        # Exibe os eventos disponíveis do tipo escolhido com informações detalhadas.
+        print('\nEventos disponíveis:')
+        simpleLine()
+        for index, event in enumerate(eventsAvailable):
+            print(
+                f'{index} - {event["name"]} ({event["date"]}, {event["hours"]})')
+            simpleLine()
 
         try:
-            # Solicita ao usuário que digite o índice do evento que deseja selecionar
-            indiceEvento = int(
-                input('Digite o índice do evento que deseja selecionar: '))
-            if 0 <= indiceEvento < len(eventosDisponiveis):
-                eventoSelecionado = eventosDisponiveis[indiceEvento]
+            # Solicita ao participante que insira o número do evento que deseja selecionar.
+            indexEvent = int(
+                input('Digite o número do evento que deseja selecionar: '))
+            if 0 <= indexEvent < len(eventsAvailable):
+                # Obtém o evento selecionado com base no índice inserido.
+                eventSelected = eventsAvailable[indexEvent]
 
-                # Verifica se o evento já foi selecionado pelo participante
-                if eventoSelecionado in selecao:
+                # Verifica se o evento já foi selecionado anteriormente.
+                if eventSelected in selection:
+                    # Exibe uma mensagem se o evento já foi selecionado e continua o loop.
                     print(
-                        f'Você já selecionou o evento "{eventoSelecionado["nome"]}".')
+                        f'Você já selecionou o evento "{eventSelected["name"]}".')
+                    simpleLine()
                 else:
-                    # Adiciona o evento à seleção do participante e atualiza seus dados
-                    selecao.append(eventoSelecionado)
-                    participante.setdefault(
-                        tipoEvento.lower() + 'Selecionadas', []).append(eventoSelecionado)
-                    linha()
+                    # Registra a seleção do evento e fornece uma mensagem de sucesso.
+                    selection.append(eventSelected)
+                    participant.setdefault(
+                        event_type.lower() + 'Selected', []).append(eventSelected)
                     print(
-                        f'Evento "{eventoSelecionado["nome"]}" selecionado com sucesso!')
-                    linha()
+                        f'Evento "{eventSelected["name"]}" selecionado com sucesso!')
+                    simpleLine()
             else:
+                # Exibe uma mensagem de erro se o índice do evento estiver fora dos limites e continua o loop.
                 print('Índice do evento fora dos limites.')
+                simpleLine()
         except ValueError:
+            # Exibe uma mensagem de erro se o valor inserido não for um número válido e continua o loop.
             print('Índice do evento inválido. Digite um número válido.')
 
-        continuar = input(
-            'Deseja selecionar outro evento? (S/N): ').strip().upper()
-        if continuar != 'S':
+        # Solicita ao participante se deseja selecionar outro evento (S/N).
+        choice = input(
+            'Deseja selecionar outro evento (S/N)? ').strip().upper()
+        simpleLine()
+        if choice != 'S':
+            # Encerra o loop se o participante não desejar selecionar outro evento.
             break
 
 
-def gerarCertificado():
-    # Imprime uma linha para separar visualmente a seção do certificado
-    linha()
-    # Função tituloCentralizado() deve imprimir um título centralizado para a seção de geração de certificados
-    tituloCentralizado('GERAR CERTIFICADOS')
-    linha()
+def chooseEvent():
+    # Exibe a lista de participantes cadastrados
+    listParticipants()
 
-    # Exibe a lista de participantes para que o usuário possa escolher
-    print('Lista de Participantes:')
-    for i, participante in enumerate(users['user']):
-        print(f'{i + 1}. {participante["name"]}')
+    # Solicita o nome do participante desejado e formata para capitalizar e remover espaços em excesso
+    nameParticipant = str(
+        input('Insira o nome do participante: ')).capitalize().strip()
 
-    # Solicita ao usuário que selecione o número do participante
+    participant = None
+
+    # Procura o participante na lista de participantes
+    for user in users['participants']:
+        if user['name'] == nameParticipant:
+            participant = user
+            break
+
+    # Se o participante não for encontrado, exibe uma mensagem e encerra a função
+    if participant is None:
+        print(
+            f'Participante {nameParticipant} não encontrado na nossa base de dados.')
+        return
+
+    # Chama a função choiceEvent para permitir que o participante selecione eventos
+    choiceEvent(participant)
+
+    # Volta para a função anterior após a seleção dos eventos
+    back()
+    sleep(3)
+
+
+def generateCertificate():
+    line()
+    titleCentered('GERAR CERTIFICADO')
+    line()
+
+    listParticipants()
+
+    # Loop para selecionar um participante com tratamento de exceções
     while True:
         try:
-            escolha = int(input('Selecione o número do participante: '))
-            if 1 <= escolha <= len(users['user']):
-                participante = users['user'][escolha - 1]
+            choice = int(input('Selecione o número do participante: '))
+            if 1 <= choice <= len(users['participants']):
+                participant = users['participants'][choice - 1]
                 break
             else:
-                print('Número de participante inválido. Tente novamente.')
+                print('Número de participante inválido. Tente novamente')
         except ValueError:
             print('Número de participante inválido. Tente novamente.')
 
-    # Imprime uma linha para separar visualmente a seção do certificado
-    linha()
-    # Função tituloCentralizado() deve imprimir um título centralizado com o nome do participante
-    tituloCentralizado(
-        f'EVENTOS INSCRITOS POR PARTICIPANTE: {participante["name"]}')
-    linha()
+    # Exibe título com o nome do participante selecionado
+    line()
+    titleCentered(F'EVENTOS INSCRITOS POR PARTICIPANTE: {participant["name"]}')
+    line()
 
-    # Verifica se o participante está inscrito em minicursos e exibe informações sobre eles
-    if 'minicursoSelecionados' in participante:
+    # Exibe informações dos workshops inscritos pelo participante, se houver
+    if 'workshopsSelected' in participant:
+        simpleLine()
         print('Minicursos inscritos:')
-        # Função linhaSimples() deve imprimir uma linha simples para separar a lista de eventos
-        linhaSimples()
-        for evento in participante['minicursoSelecionados']:
-            # Exibe informações sobre cada minicurso
-            print(f'Nome: {evento["nome"]}')
-            print(f'Data: {evento["data"]}')
-            print(f'Horário: {evento["horario"]}')
-            print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-            print(f'Ministrante: {evento["ministrante"]}')
-            # Função linha() deve imprimir uma linha para separar visualmente os eventos
-            linha()
+        simpleLine()
+        for event in participant['workshopsSelected']:
+            print(f'Nome: {event["name"]}')
+            print(f'Data: {event["date"]}')
+            print(f'Horário: {event["hours"]}')
+            print(f'Local: {event["local"]}')
+            print(f'Carga Horária: {event["workLoad"]} horas')
+            print(f'Ministrante: {event["minister"]}')
+            simpleLine()
 
-    # Verifica se o participante está inscrito em palestras e exibe informações sobre elas
-    if 'palestrasSelecionadas' in participante:
+    # Exibe informações das palestras inscritas pelo participante, se houver
+    if 'lecturesSelected' in participant:
+        simpleLine()
         print('Palestras inscritas:')
-        # Função linhaSimples() deve imprimir uma linha simples para separar a lista de eventos
-        linhaSimples()
-        for evento in participante['palestrasSelecionadas']:
-            # Exibe informações sobre cada palestra
-            print(f'Nome: {evento["nome"]}')
-            print(f'Data: {evento["data"]}')
-            print(f'Horário: {evento["horario"]}')
-            print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-            print(f'Ministrante: {evento["ministrante"]}')
-            # Função linha() deve imprimir uma linha para separar visualmente os eventos
-            linha()
+        simpleLine()
+        for event in participant['lecturesSelected']:
+            print(f'Nome: {event["name"]}')
+            print(f'Data: {event["date"]}')
+            print(f'Horário: {event["hours"]}')
+            print(f'Local: {event["local"]}')
+            print(f'Carga Horária: {event["workLoad"]} horas')
+            print(f'Ministrante: {event["minister"]}')
+            simpleLine()
 
-    # Calcula a carga horária total do participante com base nas atividades selecionadas
-    carga_horaria_total = 0
-    if 'minicursoSelecionados' in participante:
-        carga_horaria_total += sum(
-            evento['cargaHoraria'] for evento in participante['minicursoSelecionados'])
-    if 'palestrasSelecionadas' in participante:
-        carga_horaria_total += sum(
-            evento['cargaHoraria'] for evento in participante['palestrasSelecionadas'])
+    # Calcula a carga horária total de todos os eventos inscritos
+    totalWorkLoad = 0
+    if 'workshopsSelected' in participant:
+        totalWorkLoad += sum(
+            event['workLoad'] for event in participant['workshopsSelected'])
+    if 'lecturesSelected' in participant:
+        totalWorkLoad += sum(
+            event['workLoad'] for event in participant['lecturesSelected'])
 
-    # Exibe a carga horária total do participante
-    print(f'Carga Horária Total: {carga_horaria_total} horas')
+    # Exibe a carga horária total
+    print(f'Carga Horária Total: {totalWorkLoad} horas.')
 
-    # Imprime uma linha para separar visualmente a seção do certificado
-    linha()
+    simpleLine()
 
-    # Obtém a data atual e formata como uma string
-    data_atual = datetime.date.today()
-    data_emissao = data_atual.strftime('%d/%m/%Y')
-    print(f'Certificado emitido em {data_emissao}')
+    # Obtém a data atual e exibe como data de emissão do certificado
+    currentDate = datetime.date.today()
+    issuanceDate = currentDate.strftime('%d/%m/%Y')
+    print(f'Certificado emitido em {issuanceDate}.')
 
-    # Imprime uma linha para separar visualmente a seção do certificado
-    linha()
+    simpleLine()
 
-
-def calcularCargaHoraria(participante):
-    # Inicializa a variável para armazenar a carga horária total
-    cargaHorariaTotal = 0
-
-    # Itera sobre os minicursos selecionados pelo participante
-    for evento in participante.get('minicursoSelecionados', []):
-        # Adiciona a carga horária do minicurso à carga horária total
-        cargaHorariaTotal += evento['cargaHoraria']
-
-    # Itera sobre as palestras selecionadas pelo participante
-    for evento in participante.get('palestrasSelecionadas', []):
-        # Adiciona a carga horária da palestra à carga horária total
-        cargaHorariaTotal += evento['cargaHoraria']
-
-    # Retorna a carga horária total calculada
-    return cargaHorariaTotal
+    # Chama a função 'back' para retornar ao menu principal
+    back()
+    sleep(3)
 
 
-def listarParticipantesComEventos():
-    # Função linha() deve imprimir uma linha para separar visualmente as seções da lista
-    linha()
-    # Função tituloCentralizado() deve imprimir um título centralizado para a lista
-    tituloCentralizado('LISTA DE PARTICIPANTES COM EVENTOS')
-    linha()
-
-    # Itera sobre os participantes no dicionário 'users'
-    for participante in users['user']:
-        nome = participante['name']
-        telefone = participante['telefone']
-        instituicao = participante['instituição']
-
-        # Imprime informações do participante
-        print(f'Nome: {nome}')
-        print(f'Telefone: {telefone}')
-        print(f'Instituição: {instituicao}')
-
-        eventosInscritos = []
-
-        # Verifica se o participante está inscrito em minicursos e palestras
-        if 'minicursoSelecionados' in participante:
-            eventosInscritos.extend(participante['minicursoSelecionados'])
-
-        if 'palestrasSelecionadas' in participante:
-            eventosInscritos.extend(participante['palestrasSelecionadas'])
-
-        # Se o participante estiver inscrito em algum evento
-        if eventosInscritos:
-            print('Eventos Inscritos:')
-            # Função linhaSimples() deve imprimir uma linha simples para separar a lista de eventos
-            linhaSimples()
-            # Itera sobre os eventos inscritos pelo participante
-            for evento in eventosInscritos:
-                # Função tituloCentralizado() deve imprimir um título centralizado para cada tipo de evento
-                tituloCentralizado(evento['tipo'])
-                print(f'Nome: {evento["nome"]}')
-                print(f'Data: {evento["data"]}')
-                print(f'Horário: {evento["horario"]}')
-                print(f'Carga Horária: {evento["cargaHoraria"]} horas')
-                print(f'Ministrante: {evento["ministrante"]}')
-                # Função linha() deve imprimir uma linha para separar visualmente os eventos
-                linha()
-        else:
-            # Se o participante não estiver inscrito em nenhum evento, exibe uma mensagem
-            print('O participante não está inscrito em nenhum evento.')
-
-        # Imprime uma linha para separar visualmente os participantes na lista
-        linha()
-
-
-def limparTerminal():
-    # A função os.system() permite executar comandos no sistema operacional.
-    # Dependendo do sistema operacional, ele executará 'cls' (Windows) ou 'clear' (Linux/Unix) para limpar a tela do terminal.
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
-def menuPrincipal():
+def mainMenu():
     while True:
-        # Função linha() deve imprimir uma linha para separar visualmente as seções do menu
-        linha()
-        # Imprime o cabeçalho do menu centralizado
-        print(f'{"MENU DE OPÇÕES":^30}')
-        # Outra linha para separação
-        linha()
+        line()
+        titleCentered('MENU DE OPÇÕES')
+        line()
 
         # Exibe as opções do menu numeradas
         print('1 - Cadastro de participantes.')
         print('2 - Cadastro de eventos.')
-        print('3 - Listar todos os eventos.')
-        print('4 - Se cadastrar em eventos.')
-        print('5 - Gerar certificados.')
-        print('6 - Listar os participantes.')
-        print('7 - Sair.')
+        print('3 - Listar eventos do sistema.')
+        print('4 - Escolher evento.')
+        print('5 - Gerar certificado.')
+        print('6 - Sair.')
 
         # Solicita a escolha do usuário
-        opc = str(input('Informe sua opção: '))
+        choice = str(input('Informe sua opção:'))
+        clearTerminal()
 
-        # Função limparTerminal() deveria realizar alguma ação que não está definida aqui
-
-        # Verifica a escolha do usuário e executa a ação correspondente
-        if opc == '1':
-            # Chama a função para cadastrar participantes
-            cadastrarParticipante()
-        elif opc == '2':
-            # Chama a função para cadastrar eventos
-            cadastrarEvento()
-        elif opc == '3':
-            # Chama a função para listar todos os eventos
-            listarEventos()
-        elif opc == '4':
-            # Chama a função para o usuário se cadastrar em eventos
-            escolherEvento()
-        elif opc == '5':
-            # Chama a função para gerar certificados
-            gerarCertificado()
-        elif opc == '6':
-            # Chama a função para listar os participantes com eventos
-            listarParticipantesComEventos()
-        elif opc == '7':
+        if choice == '1':
+            registerParticipant()
+        elif choice == '2':
+            registerEvent()
+        elif choice == '3':
+            listEvents()
+        elif choice == '4':
+            chooseEvent()
+        elif choice == '5':
+            generateCertificate()
+        elif choice == '6':
             # Imprime uma mensagem de saída e sai do loop infinito, encerrando o programa
             print('OBRIGADO POR USAR NOSSO SISTEMA! FIM DO PROGRAMA!')
             break
         else:
             # Se o usuário inserir uma opção inválida, exibe uma mensagem de erro
             print('OPÇÃO INVÁLIDA, TENTE NOVAMENTE!')
+        # Limpa o terminal depois de sair do menu
+        sleep(2)
+        clearTerminal()
 
 
-menuPrincipal()
+mainMenu()
