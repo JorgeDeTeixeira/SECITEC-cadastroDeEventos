@@ -128,3 +128,22 @@ def validateHours(hours):
     except ValueError:
         # Se a conversão falhar, o horário é inválido
         return False
+
+# No arquivo utils.py
+
+def get_valid_input(prompt, validation_func):
+    """
+    Solicita entrada ao usuário e valida-a usando a função de validação fornecida.
+    
+    Args:
+        prompt (str): A mensagem a ser exibida para solicitar entrada ao usuário.
+        validation_func (function): Uma função que valida a entrada do usuário. Deve retornar True ou False.
+    
+    Returns:
+        str: A entrada válida fornecida pelo usuário.
+    """
+    while True:
+        user_input = input(prompt)
+        if validation_func(user_input):
+            return user_input
+        print("Entrada inválida. Por favor, tente novamente.")
