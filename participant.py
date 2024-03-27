@@ -4,25 +4,40 @@ from time import sleep
 
 
 class Participant:
+    """
+    Classe que representa um participante do evento.
+
+    Atributos:
+        name: Nome do participante.
+        number: Número de telefone do participante.
+        institution: Instituição à qual o participante está vinculado.
+        minicoursesSelected: Lista de minicursos selecionados pelo participante.
+        lecturesSelected: Lista de palestras selecionadas pelo participante.
+    """
+
     def registerParticipant():
+        """
+        Função para registrar um novo participante no evento.
+
+        Raises:
+            Exception: Se ocorrer qualquer erro durante o registro do participante.
+        """
+
         try:
+            # Exibe linhas e título centralizado
             u.line()
             u.titleCentered("CADASTRO DE PARTICIPANTE")
             u.line()
 
-            # Solicita ao usuário que informe o nome
+            # Solicita e valida o nome do participante
             name = str(input("Informe seu nome: ")).strip().capitalize()
-
-            # Validação do nome: verifica se o nome não está em branco
             while not name:
                 name = (
                     str(input("Nome inválido. Informe seu nome: ")).strip().capitalize()
                 )
 
-            # Solicita ao usuário que informe o telefone celular
+            # Solicita e valida o número de telefone do participante
             number = str(input("Informe seu telefone (9 dígitos apenas): "))
-
-            # Validação do telefone: verifica se é um número de 9 dígitos
             while not number.isdigit() or len(number) != 9:
                 number = str(
                     input(
@@ -30,10 +45,8 @@ class Participant:
                     )
                 )
 
-            # Solicita ao usuário que informe a instituição vinculada
+            # Solicita e valida a instituição do participante
             institution = str(input("Instituição vinculada: ")).strip().capitalize()
-
-            # Validação da instituição: verifica se o nome não está em branco
             while not institution:
                 institution = (
                     str(input("Nome inválido. Informe o nome da instituição: "))
@@ -41,6 +54,7 @@ class Participant:
                     .capitalize()
                 )
 
+            # Cria um dicionário para armazenar os dados do novo participante
             newParticipant = {
                 "name": name,
                 "number": number,
@@ -49,27 +63,34 @@ class Participant:
                 "lecturesSelected": [],  # Lista de palestras selecionadas vazia
             }
 
-            # Adicionar o novo participante á lista de participantes (users['participant'])
+            # Adiciona o novo participante à lista de participantes
             dd.users["participants"].append(newParticipant)
 
+            # Exibe linhas e mensagem de sucesso
             u.line()
             print(f"Usuário {name} adicionado com sucesso!")
             u.line()
 
-            # Agora, vamos aguardar até que o usuário pressione 'Q' para sair
+            # Aguarda o usuário pressionar 'Q' para sair
             u.back()
 
             sleep(2)
+
         except Exception as e:
-            # Lidar com exceções em gerais e fornecer informçaões sobre o erro
+            # Exibe mensagem de erro e informações sobre o erro
             print(f"Ocorreu um erro durante o cadastro: {str(e)}")
 
     def listParticipants():
+        """
+        Função para listar todos os participantes cadastrados.
+        """
+
+        # Exibe linhas e título centralizado
         u.line()
         u.titleCentered("LISTA DE PARTICIPANTES")
         u.line()
 
-        # Loop para percorrer a lista de participantes e exibi-los
+        # Percorre a lista de participantes e exibe os dados de cada um
         for index, user in enumerate(dd.users["participants"]):
             # Exibe o índice e o nome do participante
             print(f'Índice: {index + 1} - Nome: {user["name"]} ')
